@@ -1,0 +1,106 @@
+#ifndef __CLIENTSKT_H__
+#define __CLIENTSKT_H__
+
+#include <QTcpSocket>
+#include <QUdpSocket>
+
+class ClientSkt : public QObject
+{
+	Q_OBJECT
+
+public:
+	ClientSkt(QObject *parent=0);
+	virtual ~ClientSkt();
+
+	virtual QString name() const { return "General"; };
+
+	bool plug(const QHostAddress& ip, quint16 port);
+	void unplug();
+	void send(const QString& data);
+
+	const QHostAddress& addr() const { return m_ip; };
+	quint16 port() const { return m_port; };
+
+signals:
+	void unpluged();
+
+	void message(const QString& msg);
+	void dumpbin(const QString& title, const char* data, quint32 len);
+
+	void countRecv(quint32 bytes);
+	void countSend(quint32 bytes);
+
+protected:
+	void dump(const char* buf, quint32 len, bool isSend);
+	void show(const QString& msg);
+	void setError(const QString& err);
+
+	void recordRecv(quint32 bytes);
+	void recordSend(quint32 bytes);
+
+	virtual bool open() =0;
+	virtual void close() =0;
+	virtual void send(const QByteArray& data) =0;
+
+private:
+	QHostAddress m_ip;
+	quint16 m_port;
+
+	quint32 m_recv;
+	quint32 m_send;
+
+	QString m_error;
+};
+
+class ClientSktTcp : public ClientSkt
+{
+	Q_OBJECT
+
+public:
+	ClientSktTcp(QObject *parent=0);
+	~ClientSktTcp();
+
+	virtual QString name() const { return "TCP"; };
+
+protected:
+	virtual bool open();
+	virtual void close();
+	virtual void send(const QByteArray& bin);
+
+private slots:
+	void asynConn();
+	void newData();
+	void closed();
+	void error();
+
+private:
+	QTcpSocket m_socket;
+};
+
+class ClientSktUdp : public ClientSkt
+{
+	Q_OBJECT
+
+public:
+	ClientSktUdp(QObject *parent=0);
+	~ClientSktUdp();
+
+	virtual QString name() const { return "UDP"; };
+
+protected:
+	virtual bool open();
+	virtual void close();
+	virtual void send(const QByteArray& bin);
+
+private slots:
+	void asynConn();
+	void newData();
+	void closed();
+	void error();
+
+private:
+	QUdpSocket m_socket;
+};
+
+#endif // __CLIENTSKT_H__
+
