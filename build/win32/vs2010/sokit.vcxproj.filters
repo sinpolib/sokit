@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="forms">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="generated">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="generated\debug">
+      <UniqueIdentifier>{b584348f-a7f7-4356-9b92-d30fa515ea20}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="generated\release">
+      <UniqueIdentifier>{5f0af990-eb13-4fb8-befb-c62817914c50}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\sokit\baseform.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\clientform.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\clientskt.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\helpform.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\logger.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\notepadform.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\serverform.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\serverskt.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\setting.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\toolkit.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\transferform.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\sokit\transferskt.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_transferskt.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_transferskt.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_transferform.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_transferform.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_serverskt.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_serverskt.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_serverform.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_serverform.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_notepadform.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_notepadform.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_main.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_main.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_logger.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_logger.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_helpform.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_helpform.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_clientskt.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_clientskt.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_clientform.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_clientform.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\debug\moc_baseform.cpp">
+      <Filter>generated\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\release\moc_baseform.cpp">
+      <Filter>generated\release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\tmp\qrc_icons.cpp">
+      <Filter>generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\src\sokit\baseform.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\clientform.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\clientskt.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\helpform.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\logger.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\main.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\notepadform.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\serverform.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\serverskt.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\transferform.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\transferskt.h">
+      <Filter>header</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\clientform.ui">
+      <Filter>forms</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\helpform.ui">
+      <Filter>forms</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\icons.qrc">
+      <Filter>resource</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\serverform.ui">
+      <Filter>forms</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\src\sokit\transferform.ui">
+      <Filter>forms</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\sokit\resource.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\sokit\setting.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\sokit\toolkit.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\tmp\ui_clientform.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\tmp\ui_helpform.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\tmp\ui_serverform.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\tmp\ui_transferform.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\sokit\sokit.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\..\src\sokit\sokit.ico">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\..\src\sokit\sokit.ts">
+      <Filter>resource</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\..\src\sokit\sokit.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
