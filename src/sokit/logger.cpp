@@ -14,7 +14,7 @@
 #define SET_MAX_LOGTRM  30
 
 Logger::Logger(QObject *parent)
-: QObject(parent),m_treeOut(0),m_textOut(0),m_chkWrite(0)
+: QObject(parent),m_chkWrite(0),m_treeOut(0),m_textOut(0)
 {
 }
 
@@ -56,7 +56,7 @@ void Logger::init(QTreeWidget* o, QCheckBox* w, QPlainTextEdit* d)
 
 		QAction* all = new QAction(tr("Select All"), this);
 		all->setShortcuts(QKeySequence::SelectAll);
-		connect(all, SIGNAL(triggered()), m_textOut, SIGNAL(selectAll()));
+        connect(all, SIGNAL(triggered()), m_textOut, SLOT(selectAll()));
 
 		m_cmlog.addAction(copy);
 		m_cmlog.addSeparator();
@@ -124,7 +124,7 @@ const QString Logger::getLogFileName()
 			}
 		}
 
-		m_dir = property(SET_SEC_DIR).toString();
+        m_dir = Setting::path() + "/" + property(SET_SEC_DIR).toString();
 	}
 
 	return (i==2) ? QString() : m_dir + QDir::separator() + 

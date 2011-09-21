@@ -12,7 +12,7 @@
 #define SET_KEY_CMBSP  "/srcport"
 #define SET_KEY_CMBDP  "/dstport"
 
-#define SET_VAL_LGTAN  "./log_transf"
+#define SET_VAL_LGTAN  "log_transf"
 
 #define PROP_EDIT "edit"
 #define PROP_DIRT "dirt"

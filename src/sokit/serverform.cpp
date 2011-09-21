@@ -12,7 +12,7 @@
 #define SET_KEY_CMBTP  "/tport"
 #define SET_KEY_CMBUP  "/uport"
 
-#define SET_VAL_LGSVR  "./log_server"
+#define SET_VAL_LGSVR  "log_server"
 
 ServerForm::ServerForm(QWidget *parent, Qt::WFlags flags)
 : BaseForm(parent, flags)

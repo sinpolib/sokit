@@ -9,7 +9,7 @@
 #define SET_KEY_CMBIP  "/ip"
 #define SET_KEY_CMBPT  "/port"
 
-#define SET_VAL_LGCLT  "./log_client"
+#define SET_VAL_LGCLT  "log_client"
 
 ClientForm::ClientForm(QWidget* p, Qt::WFlags f)
 :BaseForm(p, f),m_client(0)

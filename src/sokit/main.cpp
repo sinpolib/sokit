@@ -1,4 +1,4 @@
-﻿#include <QTabWidget>
+#include <QTabWidget>
 #include <QShortcut>
 #include <QFontDatabase>
 
@@ -56,6 +56,29 @@ void Sokit::initDefaultActionsName()
 	translate("QTextControl", "Select All");
 }
 
+bool Sokit::initTranslator()
+{
+	QString file = Setting::get(SET_SEC_CFG, SET_KEY_LANG, SET_VAL_LANG);
+
+	QStringList paths;
+	paths << "."
+        << "../share/" SET_APP_NAME
+        << "../share/apps/" SET_APP_NAME
+		<< Setting::path();
+
+	foreach (QString p, paths)
+	{
+		if (m_trans.load(file, p, "", SET_VAL_LANX))
+		{
+			installTranslator(&m_trans);
+			Setting::set(SET_SEC_CFG, SET_KEY_LANG, file);
+			break;
+		}
+	}
+
+	return true;
+}
+
 void Sokit::initFont()
 {
 	QFontDatabase db;
@@ -111,21 +134,14 @@ void Sokit::initFont()
 
 bool Sokit::initUI()
 {
-	QString file = Setting::get(SET_SEC_CFG, SET_KEY_LANG, SET_VAL_LANG);
-
-	if (m_trans.load(file, ".", "", SET_VAL_LANX))
-	{
-		installTranslator(&m_trans);
-		Setting::set(SET_SEC_CFG, SET_KEY_LANG, file);
-	}
-
+	initTranslator();
 	initFont();
 
 	HelpForm* h = new HelpForm(&m_wnd, Qt::WindowCloseButtonHint);
 
 	QShortcut* k = new QShortcut(QKeySequence(Qt::Key_F1), &m_wnd);
 	QShortcut* t = new QShortcut(QKeySequence(Qt::Key_F10), &m_wnd);
-	connect(k, SIGNAL(activated()), h, SLOT(open()));
+    connect(k, SIGNAL(activated()), h, SLOT(exec()));
 	connect(t, SIGNAL(activated()), this, SLOT(ontop()));
 
 	m_wnd.setWindowTitle(translate("Sokit", "sokit -- F1 for help"));

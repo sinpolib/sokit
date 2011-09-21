@@ -120,6 +120,7 @@ QString TK::ascii2hex(const QString& src, QVector<uint>& posmap, uint& count)
 			case OUT:    status = OUT2IN; break;
 			case OUT2IN: status = OUT; break;
 			case IN:     status = ERR; break;
+            case ERR:    break;
 			}
 
 			if (OUT2IN == status)
@@ -306,6 +307,7 @@ bool TK::ascii2bin(const QString& src, QByteArray& dst, QString& err)
 			case OUT:    status = OUT2IN; break;
 			case OUT2IN: status = OUT; break;
 			case IN:     status = ERR; break;
+            case ERR:    break;
 			}
 
 			if (OUT2IN == status)
