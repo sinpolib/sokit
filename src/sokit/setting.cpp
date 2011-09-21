@@ -1,12 +1,35 @@
 #include <QComboBox>
 #include <QSettings>
+#include <QFileInfo>
+#include <QDir>
 
 #include "setting.h"
 
+Setting::Setting()
+{
+	QString path(QDir::currentPath());
+    if (!QFileInfo(path).isWritable() ||
+        path == QDir::homePath ())
+	{
+		QDir dir(QDir::home());
+		dir.mkdir("." SET_APP_NAME);
+		if (dir.cd("." SET_APP_NAME))
+			path = dir.absolutePath();
+	}
+
+	QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, path);
+}
+
 QSettings& Setting::storage()
 {
-	static QSettings g_settings(SET_CONF_FILE, QSettings::IniFormat);
+	static Setting dummy; // to ensure call QSettings::setPath before create the g_settings
+	static QSettings g_settings(QSettings::IniFormat, QSettings::UserScope, SET_APP_NAME);
 	return g_settings;
+}
+
+QString Setting::path()
+{
+	return QFileInfo(storage().fileName()).dir().absolutePath();
 }
 
 void Setting::flush()

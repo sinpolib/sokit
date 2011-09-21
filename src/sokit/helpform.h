@@ -1,4 +1,4 @@
-﻿#ifndef __HELPFORM_H__
+#ifndef __HELPFORM_H__
 #define __HELPFORM_H__
 
 #include "ui_helpform.h"

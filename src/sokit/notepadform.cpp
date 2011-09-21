@@ -8,7 +8,7 @@
 #include <QShortcut>
 #include <QTabWidget>
 
-#define SET_NP_FILE  "./sokit.txt"
+#define SET_NP_FILE  "sokit.txt"
 
 NotepadForm::NotepadForm(QWidget* p, Qt::WFlags f)
 :QWidget(p, f)
@@ -53,7 +53,7 @@ void NotepadForm::setupUi()
 
 bool NotepadForm::init()
 {
-	QFile file(SET_NP_FILE);
+	QFile file(Setting::path() + "/" + SET_NP_FILE);
 
 	if (file.open(QIODevice::ReadOnly|QIODevice::Text))
 	{
@@ -68,7 +68,7 @@ bool NotepadForm::init()
 
 void NotepadForm::uninit()
 {
-	QFile file(SET_NP_FILE);
+	QFile file(Setting::path() + "/" + SET_NP_FILE);
 
 	if (file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
 	{

@@ -165,13 +165,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>60</width>
+          <width>75</width>
           <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>60</width>
+          <width>75</width>
           <height>24</height>
          </size>
         </property>
@@ -583,12 +583,6 @@
      <property name="wordWrap">
       <bool>true</bool>
      </property>
-     <attribute name="headerVisible">
-      <bool>false</bool>
-     </attribute>
-     <attribute name="headerStretchLastSection">
-      <bool>true</bool>
-     </attribute>
      <attribute name="headerVisible">
       <bool>false</bool>
      </attribute>

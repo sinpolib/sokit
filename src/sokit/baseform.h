@@ -3,6 +3,8 @@
 
 #include <QMutex>
 #include "logger.h"
+#include <QToolButton>
+#include <QComboBox>
 
 class QLabel;
 class QListWidget;
@@ -35,7 +37,7 @@ protected:
 	virtual bool initHotkeys() =0;
 	virtual void initConfig() =0;
 	virtual void saveConfig() =0;
-	virtual void kill(QStringList& list) {};
+    virtual void kill(QStringList& /*list*/) {};
 	virtual void send(const QString& data, const QString& dir) =0;
 
 signals:

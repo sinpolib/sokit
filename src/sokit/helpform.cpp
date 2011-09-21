@@ -1,4 +1,4 @@
-﻿#include "toolkit.h"
+#include "toolkit.h"
 #include "setting.h"
 #include "helpform.h"
 
