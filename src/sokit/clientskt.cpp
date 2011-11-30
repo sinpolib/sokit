@@ -37,12 +37,12 @@ void ClientSkt::setError(const QString& err)
 
 void ClientSkt::recordRecv(qint32 bytes)
 {
-	emit countRecv((quint32)bytes);
+	emit countRecv(bytes);
 }
 
 void ClientSkt::recordSend(qint32 bytes)
 {
-	emit countSend((quint32)bytes);
+	emit countSend(bytes);
 }
 
 void ClientSkt::send(const QString& data)
@@ -61,7 +61,7 @@ void ClientSkt::send(const QString& data)
 
 void ClientSkt::dump(const char* buf, qint32 len, bool isSend)
 {
-	emit dumpbin(QString("DAT %1").arg(isSend?"<<<<":">>>>"), buf, (quint32)len);
+	emit dumpbin(QString("DAT %1").arg(isSend?"<---":"--->"), buf, (quint32)len);
 }
 
 void ClientSkt::show(const QString& msg)

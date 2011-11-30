@@ -52,8 +52,8 @@ protected slots:
 	void select();
 	void hotOutput();
 
-	void countRecv(quint32 bytes);
-	void countSend(quint32 bytes);
+	void countRecv(qint32 bytes);
+	void countSend(qint32 bytes);
 
 	void listerAdd(const QString& caption);
 	void listerRemove(const QString& caption);

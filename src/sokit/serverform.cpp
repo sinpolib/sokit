@@ -81,15 +81,15 @@ bool ServerForm::initForm()
 	connect(&m_tcp, SIGNAL(connClose(const QString&)), this, SLOT(listerRemove(const QString&)));
 	connect(&m_tcp, SIGNAL(message(const QString&)), this, SIGNAL(output(const QString&)));
 	connect(&m_tcp, SIGNAL(dumpbin(const QString&,const char*,quint32)), this, SIGNAL(output(const QString&,const char*,quint32)));
-	connect(&m_tcp, SIGNAL(countRecv(quint32)), this, SLOT(countRecv(quint32)));
-	connect(&m_tcp, SIGNAL(countSend(quint32)), this, SLOT(countSend(quint32)));
+	connect(&m_tcp, SIGNAL(countRecv(qint32)), this, SLOT(countRecv(qint32)));
+	connect(&m_tcp, SIGNAL(countSend(qint32)), this, SLOT(countSend(qint32)));
 
 	connect(&m_udp, SIGNAL(connOpen(const QString&)), this, SLOT(listerAdd(const QString&)));
 	connect(&m_udp, SIGNAL(connClose(const QString&)), this, SLOT(listerRemove(const QString&)));
 	connect(&m_udp, SIGNAL(message(const QString&)), this, SIGNAL(output(const QString&)));
 	connect(&m_udp, SIGNAL(dumpbin(const QString&,const char*,quint32)), this, SIGNAL(output(const QString&,const char*,quint32)));
-	connect(&m_udp, SIGNAL(countRecv(quint32)), this, SLOT(countRecv(quint32)));
-	connect(&m_udp, SIGNAL(countSend(quint32)), this, SLOT(countSend(quint32)));
+	connect(&m_udp, SIGNAL(countRecv(qint32)), this, SLOT(countRecv(qint32)));
+	connect(&m_udp, SIGNAL(countSend(qint32)), this, SLOT(countSend(qint32)));
 
 	return true;
 }

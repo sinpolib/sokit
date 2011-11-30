@@ -39,8 +39,8 @@ signals:
 	void dumpbin(const QString& title, const char* data, quint32 len);
 	void stopped();
 
-	void countRecv(quint32 bytes);
-	void countSend(quint32 bytes);
+	void countRecv(qint32 bytes);
+	void countSend(qint32 bytes);
 
 protected:
 	enum DIR { TS2D, TD2S, SS2D, SD2S, }; 

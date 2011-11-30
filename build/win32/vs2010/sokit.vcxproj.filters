@@ -33,6 +33,9 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{de80990b-4b4f-4245-b787-dc984296caaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\sokit\baseform.cpp">
@@ -226,6 +229,15 @@
     </None>
     <None Include="..\..\..\src\sokit\sokit.ts">
       <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\..\doc\sokit\change.log">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\..\..\doc\sokit\license.gpl3">
+      <Filter>doc</Filter>
+    </None>
+    <None Include="..\..\..\doc\sokit\readme.txt">
+      <Filter>doc</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
