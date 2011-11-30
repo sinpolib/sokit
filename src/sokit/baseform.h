@@ -62,8 +62,11 @@ private:
 	QMutex m_door;
 	Logger m_logger;
 
-	QLabel* m_cntRecv;
-	QLabel* m_cntSend;
+	quint32 m_cntRecv;
+	quint32 m_cntSend;
+
+	QLabel* m_labRecv;
+	QLabel* m_labSend;
 
 	QListWidget* m_cnlist;
 };

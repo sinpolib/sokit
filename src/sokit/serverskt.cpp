@@ -8,7 +8,7 @@
 #define MAXBUFFER 1024*1024
 
 ServerSkt::ServerSkt(QObject *parent)
-: QObject(parent),m_port(0),m_recv(0),m_send(0)
+: QObject(parent),m_port(0)
 {
 	m_started = false;
 }
@@ -21,9 +21,6 @@ bool ServerSkt::start(const QHostAddress& ip, quint16 port)
 {
 	m_ip = ip;
 	m_port = port;
-
-	m_recv = 0;
-	m_send = 0;
 
 	m_conns.clear();
 	m_error.clear();
@@ -67,10 +64,6 @@ void ServerSkt::stop()
 
 	m_conns.clear();
 
-	m_recv = m_send = 0;
-	emit countRecv(m_recv);
-	emit countSend(m_send);
-
 	close();
 
 	show(QString("stop %1 server!").arg(name()));
@@ -83,16 +76,14 @@ void ServerSkt::setError(const QString& err)
 	m_error = err;
 }
 
-void ServerSkt::recordRecv(quint32 bytes)
+void ServerSkt::recordRecv(qint32 bytes)
 {
-	m_recv += bytes;
-	emit countRecv(m_recv);
+	emit countRecv((quint32)bytes);
 }
 
-void ServerSkt::recordSend(quint32 bytes)
+void ServerSkt::recordSend(qint32 bytes)
 {
-	m_send += bytes;
-	emit countSend(m_send);
+	emit countSend((quint32)bytes);
 }
 
 void ServerSkt::getKeys(QStringList& res)
@@ -153,9 +144,9 @@ void ServerSkt::send(const QString& key, const QString& data)
 	}
 }
 
-void ServerSkt::dump(const char* buf, quint32 len, bool isSend, const QString& key)
+void ServerSkt::dump(const char* buf, qint32 len, bool isSend, const QString& key)
 {
-	emit dumpbin(QString("DAT %1 %2").arg(isSend?"<<<<":">>>>",key), buf, len);
+	emit dumpbin(QString("DAT %1 %2").arg(isSend?"<<<<":">>>>",key), buf, (quint32)len);
 }
 
 void ServerSkt::show(const QString& msg)
@@ -280,8 +271,8 @@ void ServerSktTcp::newData()
 
 	if (ioLen >= 0)
 	{
-		recordRecv((quint32)readLen);
-		dump(buf, (quint32)readLen, false, conn->key);
+		recordRecv(readLen);
+		dump(buf, readLen, false, conn->key);
 	}
 
 	TK::releaseBuffer(buf);
@@ -310,8 +301,8 @@ void ServerSktTcp::send(void* cookie, const QByteArray& bin)
 		return;
 	}
 
-	recordSend((quint32)writeLen);
-	dump(src, (quint32)srcLen, true, conn->key);
+	recordSend(writeLen);
+	dump(src, srcLen, true, conn->key);
 }
 
 ServerSktUdp::ServerSktUdp(QObject *parent)
@@ -402,10 +393,10 @@ void ServerSktUdp::newData()
 
 		if (conn)
 		{
-			recordRecv((quint32)readLen);
+			recordRecv(readLen);
 
 			conn->stamp = QDateTime::currentDateTime();
-			dump(buf, (quint32)readLen, false, conn->key);
+			dump(buf, readLen, false, conn->key);
 		}
 	}
 
@@ -437,8 +428,8 @@ void ServerSktUdp::send(void* cookie, const QByteArray& bin)
 		return;
 	}
 
-	recordSend((quint32)writeLen);
-	dump(src, (quint32)srcLen, true, conn->key);
+	recordSend(writeLen);
+	dump(src, srcLen, true, conn->key);
 }
 
 void ServerSktUdp::check()

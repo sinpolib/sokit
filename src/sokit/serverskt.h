@@ -38,13 +38,13 @@ signals:
 	void countSend(quint32 bytes);
 
 protected:
-	void dump(const char* buf, quint32 len, bool isSend, const QString& key);
+	void dump(const char* buf, qint32 len, bool isSend, const QString& key);
 	void show(const QString& msg);
 
 	void setError(const QString& err);
 
-	void recordRecv(quint32 bytes);
-	void recordSend(quint32 bytes);
+	void recordRecv(qint32 bytes);
+	void recordSend(qint32 bytes);
 
 	void getKeys(QStringList& res);
 	void setCookie(const QString& k, void* v);
@@ -61,9 +61,6 @@ private:
 	bool m_started;
 	QHostAddress m_ip;
 	quint16 m_port;
-
-	quint32 m_recv;
-	quint32 m_send;
 
 	OBJMAP m_conns;
 	QString m_error;

@@ -9,7 +9,7 @@
 #define MAXBUFFER 1024*1024
 
 TransferSkt::TransferSkt(QObject *parent)
-: QObject(parent),m_spt(0),m_dpt(0),m_recv(0),m_send(0)
+: QObject(parent),m_spt(0),m_dpt(0)
 {
 }
 
@@ -23,9 +23,6 @@ bool TransferSkt::start(const QHostAddress& sip, quint16 spt, const QHostAddress
 	m_dip = dip;
 	m_spt = spt;
 	m_dpt = dpt;
-
-	m_recv = 0;
-	m_send = 0;
 
 	m_conns.clear();
 	m_error.clear();
@@ -66,10 +63,6 @@ void TransferSkt::stop()
 
 	m_conns.clear();
 
-	m_recv = m_send = 0;
-	emit countRecv(m_recv);
-	emit countSend(m_send);
-
 	close();
 
 	show(QString("stop %1 transfer server!").arg(name()));
@@ -80,16 +73,14 @@ void TransferSkt::setError(const QString& err)
 	m_error = err;
 }
 
-void TransferSkt::recordRecv(quint32 bytes)
+void TransferSkt::recordRecv(qint32 bytes)
 {
-	m_recv += bytes;
-	emit countRecv(m_recv);
+	emit countRecv((quint32)bytes);
 }
 
-void TransferSkt::recordSend(quint32 bytes)
+void TransferSkt::recordSend(qint32 bytes)
 {
-	m_send += bytes;
-	emit countSend(m_send);
+	emit countSend((quint32)bytes);
 }
 
 void TransferSkt::getKeys(QStringList& res)
@@ -150,7 +141,7 @@ void TransferSkt::send(const QString& key, bool s2d, const QString& data)
 	}
 }
 
-void TransferSkt::dump(const char* buf, quint32 len, TransferSkt::DIR dir, const QString& key)
+void TransferSkt::dump(const char* buf, qint32 len, TransferSkt::DIR dir, const QString& key)
 {
 	QString title("TRN");
 	switch (dir)
@@ -163,7 +154,7 @@ void TransferSkt::dump(const char* buf, quint32 len, TransferSkt::DIR dir, const
 	}
 	title += key;
 
-	emit dumpbin(title, buf, len);
+	emit dumpbin(title, buf, (quint32)len);
 }
 
 void TransferSkt::show(const QString& msg)
@@ -346,7 +337,7 @@ void TransferSktTcp::newData()
 
 	if (ioLen >= 0)
 	{
-		recordRecv((quint32)readLen);
+		recordRecv(readLen);
 
 		writeLen = 0;
 		ioLen = d->write(buf, readLen);
@@ -358,8 +349,8 @@ void TransferSktTcp::newData()
 
 		if (ioLen >= 0)
 		{
-			recordSend((quint32)writeLen);
-			dump(buf, (quint32)readLen, ((s==conn->src) ? TS2D:TD2S), conn->key);
+			recordSend(writeLen);
+			dump(buf, readLen, ((s==conn->src) ? TS2D:TD2S), conn->key);
 		}
 	}
 
@@ -393,8 +384,8 @@ void TransferSktTcp::send(void* cookie, bool s2d, const QByteArray& bin)
 		return;
 	}
 
-	recordSend((quint32)writeLen);
-	dump(src, (quint32)srcLen, (s2d?SS2D:SD2S), conn->key);
+	recordSend(writeLen);
+	dump(src, srcLen, (s2d?SS2D:SD2S), conn->key);
 }
 
 TransferSktUdp::TransferSktUdp(QObject *parent)
@@ -535,7 +526,7 @@ void TransferSktUdp::newData()
 
 		if (conn)
 		{
-			recordRecv((quint32)readLen);
+			recordRecv(readLen);
 
 			conn->stamp = QDateTime::currentDateTime();
 
@@ -550,7 +541,7 @@ void TransferSktUdp::newData()
 							conn->dst->write(buf+writeLen, readLen-writeLen);
 				}
 
-				dump(buf, (quint32)readLen, TS2D, conn->key);
+				dump(buf, readLen, TS2D, conn->key);
 			}
 			else
 			{
@@ -562,10 +553,10 @@ void TransferSktUdp::newData()
 						m_server.writeDatagram(buf+writeLen, readLen-writeLen, conn->addr, conn->port);
 				}
 
-				dump(buf, (quint32)readLen, TD2S, conn->key);
+				dump(buf, readLen, TD2S, conn->key);
 			}
 
-			recordSend((quint32)writeLen);
+			recordSend(writeLen);
 		}
 	}
 
@@ -603,8 +594,8 @@ void TransferSktUdp::send(void* cookie, bool s2d, const QByteArray& bin)
 		return;
 	}
 
-	recordSend((quint32)writeLen);
-	dump(src, (quint32)srcLen, (s2d?SS2D:SD2S), conn->key);
+	recordSend(writeLen);
+	dump(src, srcLen, (s2d?SS2D:SD2S), conn->key);
 }
 
 void TransferSktUdp::check()

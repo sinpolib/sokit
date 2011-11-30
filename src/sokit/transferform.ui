@@ -778,7 +778,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="cntRecv">
+      <widget class="QLabel" name="labRecv">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -801,7 +801,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="cntSend">
+      <widget class="QLabel" name="labSend">
        <property name="toolTip">
         <string notr="true"/>
        </property>
