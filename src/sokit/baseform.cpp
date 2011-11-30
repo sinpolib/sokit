@@ -17,7 +17,7 @@
 #define PROP_TARG "targ"
 
 BaseForm::BaseForm(QWidget* p, Qt::WFlags f)
-:QWidget(p, f),m_cntRecv(0),m_cntSend(0),m_cnlist(0)
+:QWidget(p, f),m_cntRecv(0),m_cntSend(0),m_labRecv(0),m_labSend(0),m_cnlist(0)
 {
 }
 
@@ -39,8 +39,8 @@ bool BaseForm::init()
 
 void BaseForm::initCounter(QLabel* r, QLabel* s)
 {
-	m_cntRecv = r;
-	m_cntSend = s;
+	m_labRecv = r;
+	m_labSend = s;
 }
 
 void BaseForm::initLogger(QCheckBox* w, QToolButton* c, QTreeWidget* o, QPlainTextEdit* d)
@@ -150,12 +150,22 @@ void BaseForm::select()
 
 void BaseForm::countRecv(quint32 bytes)
 {
-	m_cntRecv->setText(QString::number(bytes));
+	if (bytes > 0)
+		m_cntRecv += bytes;
+	else
+		m_cntRecv = 0;
+
+	m_labRecv->setText(QString::number(m_cntRecv));
 }
 
 void BaseForm::countSend(quint32 bytes)
 {
-	m_cntSend->setText(QString::number(bytes));
+	if (bytes > 0)
+		m_cntSend += bytes;
+	else
+		m_cntSend = 0;
+
+	m_labSend->setText(QString::number(m_cntSend));
 }
 
 void BaseForm::send()
@@ -171,8 +181,8 @@ void BaseForm::clear()
 	m_logger.clear();
 
 	lock();
-	m_cntRecv->setText("0");
-	m_cntSend->setText("0");
+	countRecv(0);
+	countSend(0);
 	unlock();
 }
 

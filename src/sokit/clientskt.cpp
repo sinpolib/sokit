@@ -5,7 +5,7 @@
 #define MAXBUFFER 1024*1024
 
 ClientSkt::ClientSkt(QObject *parent)
-: QObject(parent),m_port(0),m_recv(0),m_send(0)
+: QObject(parent),m_port(0)
 {
 }
 
@@ -17,8 +17,6 @@ bool ClientSkt::plug(const QHostAddress& ip, quint16 port)
 {
 	m_ip   = ip;
 	m_port = port;
-	m_recv = 0;
-	m_send = 0;
 
 	m_error.clear();
 
@@ -27,10 +25,6 @@ bool ClientSkt::plug(const QHostAddress& ip, quint16 port)
 
 void ClientSkt::unplug()
 {
-	m_recv = m_send = 0;
-	emit countRecv(m_recv);
-	emit countSend(m_send);
-
 	close();
 
 	emit unpluged();
@@ -41,16 +35,14 @@ void ClientSkt::setError(const QString& err)
 	m_error = err;
 }
 
-void ClientSkt::recordRecv(quint32 bytes)
+void ClientSkt::recordRecv(qint32 bytes)
 {
-	m_recv += bytes;
-	emit countRecv(m_recv);
+	emit countRecv((quint32)bytes);
 }
 
-void ClientSkt::recordSend(quint32 bytes)
+void ClientSkt::recordSend(qint32 bytes)
 {
-	m_send += bytes;
-	emit countSend(m_send);
+	emit countSend((quint32)bytes);
 }
 
 void ClientSkt::send(const QString& data)
@@ -67,9 +59,9 @@ void ClientSkt::send(const QString& data)
 	send(bin);
 }
 
-void ClientSkt::dump(const char* buf, quint32 len, bool isSend)
+void ClientSkt::dump(const char* buf, qint32 len, bool isSend)
 {
-	emit dumpbin(QString("DAT %1").arg(isSend?"<<<<":">>>>"), buf, len);
+	emit dumpbin(QString("DAT %1").arg(isSend?"<<<<":">>>>"), buf, (quint32)len);
 }
 
 void ClientSkt::show(const QString& msg)
@@ -144,8 +136,8 @@ void ClientSktTcp::newData()
 
 	if (ioLen >= 0)
 	{
-		recordRecv((quint32)readLen);
-		dump(buf, (quint32)readLen, false);
+		recordRecv(readLen);
+		dump(buf, readLen, false);
 	}
 
 	TK::releaseBuffer(buf);
@@ -172,8 +164,8 @@ void ClientSktTcp::send(const QByteArray& bin)
 		return;
 	}
 
-	recordSend((quint32)writeLen);
-	dump(src, (quint32)srcLen, true);
+	recordSend(writeLen);
+	dump(src, srcLen, true);
 }
 
 ClientSktUdp::ClientSktUdp(QObject *parent)
@@ -243,8 +235,8 @@ void ClientSktUdp::newData()
 
 	if (ioLen >= 0)
 	{
-		recordRecv((quint32)readLen);
-		dump(buf, (quint32)readLen, false);
+		recordRecv(readLen);
+		dump(buf, readLen, false);
 	}
 
 	TK::releaseBuffer(buf);
@@ -272,7 +264,7 @@ void ClientSktUdp::send(const QByteArray& bin)
 		return;
 	}
 
-	recordSend((quint32)writeLen);
-	dump(src, (quint32)srcLen, true);
+	recordSend(writeLen);
+	dump(src, srcLen, true);
 }
 

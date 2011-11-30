@@ -66,7 +66,7 @@ void ServerForm::saveConfig()
 
 bool ServerForm::initForm()
 {
-	initCounter(m_ui.cntRecv, m_ui.cntSend);
+	initCounter(m_ui.labRecv, m_ui.labSend);
 	initLogger(m_ui.chkLog, m_ui.btnClear, m_ui.treeOutput, m_ui.txtOutput);
 	initLister(m_ui.btnConnAll, m_ui.btnConnDel, m_ui.lstConn);
 

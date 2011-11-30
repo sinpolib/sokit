@@ -25,7 +25,7 @@ ClientForm::~ClientForm()
 
 bool ClientForm::initForm()
 {
-	initCounter(m_ui.cntRecv, m_ui.cntSend);
+	initCounter(m_ui.labRecv, m_ui.labSend);
 	initLogger(m_ui.chkLog, m_ui.btnClear, m_ui.treeOutput, m_ui.txtOutput);
 
 	bindBuffer(0, m_ui.edtBuf0, m_ui.btnSend0, 0);
