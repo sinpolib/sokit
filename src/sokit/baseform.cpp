@@ -148,22 +148,22 @@ void BaseForm::select()
 	}
 }
 
-void BaseForm::countRecv(quint32 bytes)
+void BaseForm::countRecv(qint32 bytes)
 {
-	if (bytes > 0)
-		m_cntRecv += bytes;
-	else
+	if (bytes < 0)
 		m_cntRecv = 0;
+	else
+		m_cntRecv += bytes;		
 
 	m_labRecv->setText(QString::number(m_cntRecv));
 }
 
-void BaseForm::countSend(quint32 bytes)
+void BaseForm::countSend(qint32 bytes)
 {
-	if (bytes > 0)
-		m_cntSend += bytes;
-	else
+	if (bytes < 0)
 		m_cntSend = 0;
+	else
+		m_cntSend += bytes;
 
 	m_labSend->setText(QString::number(m_cntSend));
 }
@@ -181,8 +181,8 @@ void BaseForm::clear()
 	m_logger.clear();
 
 	lock();
-	countRecv(0);
-	countSend(0);
+	countRecv(-1);
+	countSend(-1);
 	unlock();
 }
 

@@ -34,8 +34,8 @@ signals:
 	void message(const QString& msg);
 	void dumpbin(const QString& title, const char* data, quint32 len);
 
-	void countRecv(quint32 bytes);
-	void countSend(quint32 bytes);
+	void countRecv(qint32 bytes);
+	void countSend(qint32 bytes);
 
 protected:
 	void dump(const char* buf, qint32 len, bool isSend, const QString& key);

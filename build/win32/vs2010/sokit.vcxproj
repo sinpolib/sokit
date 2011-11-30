@@ -284,6 +284,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='release|Win32'">.\..\..\..\tmp\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='release|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\..\..\..\tmp\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+    <None Include="..\..\..\doc\sokit\change.log" />
+    <None Include="..\..\..\doc\sokit\license.gpl3" />
+    <None Include="..\..\..\doc\sokit\readme.txt" />
     <None Include="..\..\..\src\sokit\sokit.ico" />
     <None Include="..\..\..\src\sokit\sokit.png">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">true</ExcludedFromBuild>

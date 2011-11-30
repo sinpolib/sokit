@@ -75,12 +75,12 @@ void TransferSkt::setError(const QString& err)
 
 void TransferSkt::recordRecv(qint32 bytes)
 {
-	emit countRecv((quint32)bytes);
+	emit countRecv(bytes);
 }
 
 void TransferSkt::recordSend(qint32 bytes)
 {
-	emit countSend((quint32)bytes);
+	emit countSend(bytes);
 }
 
 void TransferSkt::getKeys(QStringList& res)
@@ -146,10 +146,10 @@ void TransferSkt::dump(const char* buf, qint32 len, TransferSkt::DIR dir, const 
 	QString title("TRN");
 	switch (dir)
 	{
-		case TS2D: title += " >>>> "; break;
-		case TD2S: title += " <<<< "; break;
-		case SS2D: title += " ++>> "; break;
-		case SD2S: title += " <<++ "; break;
+		case TS2D: title += " -->> "; break;
+		case TD2S: title += " <<-- "; break;
+		case SS2D: title += " --+> "; break;
+		case SD2S: title += " <+-- "; break;
 		default:   title += " ???? "; break;
 	}
 	title += key;

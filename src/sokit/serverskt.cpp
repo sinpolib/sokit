@@ -78,12 +78,12 @@ void ServerSkt::setError(const QString& err)
 
 void ServerSkt::recordRecv(qint32 bytes)
 {
-	emit countRecv((quint32)bytes);
+	emit countRecv(bytes);
 }
 
 void ServerSkt::recordSend(qint32 bytes)
 {
-	emit countSend((quint32)bytes);
+	emit countSend(bytes);
 }
 
 void ServerSkt::getKeys(QStringList& res)
@@ -146,7 +146,7 @@ void ServerSkt::send(const QString& key, const QString& data)
 
 void ServerSkt::dump(const char* buf, qint32 len, bool isSend, const QString& key)
 {
-	emit dumpbin(QString("DAT %1 %2").arg(isSend?"<<<<":">>>>",key), buf, (quint32)len);
+	emit dumpbin(QString("DAT %1 %2").arg(isSend?"<---":"--->",key), buf, (quint32)len);
 }
 
 void ServerSkt::show(const QString& msg)

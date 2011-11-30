@@ -136,8 +136,8 @@ void TransferForm::trigger(bool start)
 				connect(m_server, SIGNAL(connClose(const QString&)), this, SLOT(listerRemove(const QString&)));
 				connect(m_server, SIGNAL(message(const QString&)), this, SIGNAL(output(const QString&)));
 				connect(m_server, SIGNAL(dumpbin(const QString&,const char*,quint32)), this, SIGNAL(output(const QString&,const char*,quint32)));
-				connect(m_server, SIGNAL(countRecv(quint32)), this, SLOT(countRecv(quint32)));
-				connect(m_server, SIGNAL(countSend(quint32)), this, SLOT(countSend(quint32)));
+				connect(m_server, SIGNAL(countRecv(qint32)), this, SLOT(countRecv(qint32)));
+				connect(m_server, SIGNAL(countSend(qint32)), this, SLOT(countSend(qint32)));
 				connect(m_server, SIGNAL(stopped()), this, SLOT(stop()));
 				
 				start = m_server->start(sa.ip, sa.port, da.ip, da.port);

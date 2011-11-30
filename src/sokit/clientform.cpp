@@ -151,8 +151,8 @@ bool ClientForm::plug(bool istcp)
 			connect(m_client, SIGNAL(unpluged()), this, SLOT(unpluged()));
 			connect(m_client, SIGNAL(message(const QString&)), this, SIGNAL(output(const QString&)));
 			connect(m_client, SIGNAL(dumpbin(const QString&,const char*,quint32)), this, SIGNAL(output(const QString&,const char*,quint32)));
-			connect(m_client, SIGNAL(countRecv(quint32)), this, SLOT(countRecv(quint32)));
-			connect(m_client, SIGNAL(countSend(quint32)), this, SLOT(countSend(quint32)));
+			connect(m_client, SIGNAL(countRecv(qint32)), this, SLOT(countRecv(qint32)));
+			connect(m_client, SIGNAL(countSend(qint32)), this, SLOT(countSend(qint32)));
 		
 			skt = m_client;
 		}
