@@ -8,7 +8,7 @@ class NotepadForm : public QWidget
 	Q_OBJECT
 
 public:
-	NotepadForm(QWidget* p=0, Qt::WFlags f=0);
+    NotepadForm(QWidget* p=0, Qt::WindowFlags f=0);
 	virtual ~NotepadForm();
 
 public:

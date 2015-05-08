@@ -13,7 +13,7 @@ class BaseForm : public QWidget
 	Q_OBJECT
 
 public:
-	BaseForm(QWidget* p=0, Qt::WFlags f=0);
+    BaseForm(QWidget* p=0, Qt::WindowFlags f=0);
 	virtual ~BaseForm();
 
 	bool init();

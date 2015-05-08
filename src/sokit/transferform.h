@@ -10,7 +10,7 @@ class TransferForm : public BaseForm
 	Q_OBJECT
 
 public:
-	TransferForm(QWidget* p=0, Qt::WFlags f=0);
+    TransferForm(QWidget* p=0, Qt::WindowFlags f=0);
 	~TransferForm();
 
 protected:

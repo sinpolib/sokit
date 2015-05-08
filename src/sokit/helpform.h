@@ -8,7 +8,7 @@ class HelpForm : public QDialog
 	Q_OBJECT
 
 public:
-	HelpForm(QWidget* p=0, Qt::WFlags f=0);
+    HelpForm(QWidget* p=0, Qt::WindowFlags f=0);
 	virtual ~HelpForm();
 
 private:

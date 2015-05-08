@@ -16,7 +16,7 @@
 #define PROP_DIRT "dirt"
 #define PROP_TARG "targ"
 
-BaseForm::BaseForm(QWidget* p, Qt::WFlags f)
+BaseForm::BaseForm(QWidget* p, Qt::WindowFlags f)
 :QWidget(p, f),m_cntRecv(0),m_cntSend(0),m_labRecv(0),m_labSend(0),m_cnlist(0)
 {
 }

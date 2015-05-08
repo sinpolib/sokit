@@ -5,7 +5,7 @@
 #include <QShortcut>
 #include <QTextStream>
 
-HelpForm::HelpForm(QWidget* p, Qt::WFlags f):QDialog(p, f)
+HelpForm::HelpForm(QWidget* p, Qt::WindowFlags f):QDialog(p, f)
 {
 	m_ui.setupUi(this);
 	init();

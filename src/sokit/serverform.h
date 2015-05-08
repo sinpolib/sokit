@@ -10,7 +10,7 @@ class ServerForm : public BaseForm
 	Q_OBJECT
 
 public:
-	ServerForm(QWidget* p=0, Qt::WFlags f=0);
+    ServerForm(QWidget* p=0, Qt::WindowFlags f=0);
 	virtual ~ServerForm();
 
 protected:

@@ -10,7 +10,7 @@
 
 #define SET_NP_FILE  "sokit.txt"
 
-NotepadForm::NotepadForm(QWidget* p, Qt::WFlags f)
+NotepadForm::NotepadForm(QWidget* p, Qt::WindowFlags f)
 :QWidget(p, f)
 {
 	setupUi();

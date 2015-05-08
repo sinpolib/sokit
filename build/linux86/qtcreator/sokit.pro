@@ -5,7 +5,7 @@
 TEMPLATE = app
 TARGET = sokit
 
-QT += gui network
+QT += gui widgets network
 CONFIG += debug_and_release build_all thread
 DEFINES += QT_NETWORK_LIB
 INCLUDEPATH += . ./../../../tmp ./../../../src/sokit
@@ -99,7 +99,7 @@ FORMS += ../../../src/sokit/clientform.ui \
 TRANSLATIONS += ../../../src/sokit/sokit.ts
 RESOURCES += ../../../src/sokit/icons.qrc
 
-QMAKE_PRE_LINK = lupdate ./sokit.pro
+QMAKE_PRE_LINK = lupdate $$PWD/sokit.pro
 QMAKE_POST_LINK = lrelease ../../../src/sokit/sokit.ts -qm $$DESTDIR/sokit.lan
 
 win32 {
@@ -119,4 +119,9 @@ win32 {
        }
     }
 }
+
+OTHER_FILES += \
+    ../../../src/sokit/sokit.ts \
+    ../../../LICENSE \
+    ../../../README.md
 

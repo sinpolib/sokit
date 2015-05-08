@@ -11,7 +11,7 @@
 
 #define SET_VAL_LGCLT  "log_client"
 
-ClientForm::ClientForm(QWidget* p, Qt::WFlags f)
+ClientForm::ClientForm(QWidget* p, Qt::WindowFlags f)
 :BaseForm(p, f),m_client(0)
 {
 	m_ui.setupUi(this);

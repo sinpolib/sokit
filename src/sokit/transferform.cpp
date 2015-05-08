@@ -17,7 +17,7 @@
 #define PROP_EDIT "edit"
 #define PROP_DIRT "dirt"
 
-TransferForm::TransferForm(QWidget *parent, Qt::WFlags flags)
+TransferForm::TransferForm(QWidget *parent, Qt::WindowFlags flags)
 : BaseForm(parent, flags),m_server(0)
 {
 	m_ui.setupUi(this);
