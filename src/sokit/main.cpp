@@ -185,6 +185,10 @@ void Sokit::ontop()
 
 int main(int argc, char *argv[])
 {
+    if (qgetenv("XDG_SESSION_TYPE") == QByteArrayLiteral("wayland")) {
+        qunsetenv("XDG_SESSION_TYPE");
+        qEnvironmentVariable("QT_QPA_PLATFORM", "wayland");
+    }
 	Sokit a(argc, argv);
 
 	if (a.initUI())
