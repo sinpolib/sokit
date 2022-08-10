@@ -16,8 +16,19 @@ find_package(Qt6LinguistTools)
 file(GLOB SRC_FILES "src/sokit/*.cpp" "src/sokit/*.qrc" "src/sokit/*.rc" "src/sokit/*.ui")
 file(GLOB HEAD_FILES "src/sokit/*.h")
 
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES} )
+if(CMAKE_HOST_WIN32)
+	enable_language("RC")
+	if(CMAKE_BUILD_TYPE STREQUAL "Release")
+		add_executable(${PROJECT_NAME} WIN32 ${SRC_FILES} ${HEAD_FILES} )
+	else()
+		add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES} )
+	endif()
+else()
+	add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEAD_FILES} "qml.qrc" )
+endif()
 
 qt_add_translations(${PROJECT_NAME} TS_FILES "src/sokit/sokit.ts")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets Qt6::Network )
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}/)

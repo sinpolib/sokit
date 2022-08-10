@@ -16,7 +16,7 @@
 
 #define SET_KEY_LANG "/lang"
 #define SET_VAL_LANG "sokit"
-#define SET_VAL_LANX ".lan"
+#define SET_VAL_LANX ".qm"
 
 Sokit::Sokit(int& argc, char** argv)
 	: QApplication(argc, argv)
