@@ -9,13 +9,14 @@
 class QTreeWidget;
 class QTreeWidgetItem;
 class QPlainTextEdit;
+
 class Logger : public QObject
 {
 	Q_OBJECT
 
 public:
-	Logger(QObject *parent = 0);
-	~Logger();
+	Logger(QObject* parent = nullptr);
+	~Logger() override;
 
 	void init(QTreeWidget* o, QCheckBox* w, QPlainTextEdit* d);
 
@@ -46,10 +47,9 @@ private:
 	QFile m_file;
 
 	QMenu m_cmlog, m_cmtxt;
-    QCheckBox* m_chkWrite;
-    QTreeWidget* m_treeOut;
-    QPlainTextEdit* m_textOut;
+	QCheckBox* m_chkWrite;
+	QTreeWidget* m_treeOut;
+	QPlainTextEdit* m_textOut;
 };
 
 #endif // __LOGGER_H__
-

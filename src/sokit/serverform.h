@@ -10,16 +10,16 @@ class ServerForm : public BaseForm
 	Q_OBJECT
 
 public:
-    ServerForm(QWidget* p=0, Qt::WindowFlags f=0);
-	virtual ~ServerForm();
+	ServerForm(QWidget* p = nullptr, Qt::WindowFlags f = Qt::WindowFlags(0));
+	~ServerForm() override;
 
 protected:
-	virtual bool initForm();
-	virtual bool initHotkeys();
-	virtual void initConfig();
-	virtual void saveConfig();
-	virtual void send(const QString& data, const QString& dir);
-	virtual void kill(QStringList& list);
+	bool initForm() override;
+	bool initHotkeys() override;
+	void initConfig() override;
+	void saveConfig() override;
+	void send(const QString& data, const QString& dir) override;
+	void kill(QStringList& list) override;
 
 private slots:
 	void trigger(bool start);
@@ -31,6 +31,3 @@ private:
 };
 
 #endif // __SERVERFORM_H__
-
-
-

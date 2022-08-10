@@ -9,16 +9,16 @@ class QComboBox;
 class QAbstractSocket;
 class QToolButton;
 
-typedef struct _IPAddr
+using IPAddr = struct _IPAddr
 {
 	QHostAddress ip;
 	quint16 port;
-} IPAddr;
+};
 
 class TK
 {
 public:
-	typedef enum { OUT=0, OUT2IN, IN, ERR } PARSE_STA;
+	using PARSE_STA = enum { OUT=0, OUT2IN, IN, ERR };
 
 	static const char* hextab;
 	static QString ascii2hex(const QString& src, QVector<uint>& posmap, uint& count);
@@ -27,12 +27,12 @@ public:
 	static bool ascii2bin(const QString& src, QByteArray& dst, QString& err);
 
 	static char* createBuffer(qint64& cap, qint64 limit);
-	static void  releaseBuffer(char*& buf);
+	static void releaseBuffer(char*& buf);
 
 	static const char* socketTypeName(bool tcp);
 	static const char* socketTypeName(QAbstractSocket* skt);
 
-	static void initNetworkInterfaces(QComboBox* box, bool testDef=false);
+	static void initNetworkInterfaces(QComboBox* box, bool testDef = false);
 
 	static QString ipstr(const QHostAddress& addr, quint16 port);
 	static QString ipstr(const QHostAddress& addr, quint16 port, bool tcp);
@@ -44,4 +44,3 @@ public:
 };
 
 #endif // __TOOLKIT_H__
-

@@ -8,8 +8,8 @@ class NotepadForm : public QWidget
 	Q_OBJECT
 
 public:
-    NotepadForm(QWidget* p=0, Qt::WindowFlags f=0);
-	virtual ~NotepadForm();
+	NotepadForm(QWidget* p = nullptr, Qt::WindowFlags f = Qt::WindowFlags(0));
+	~NotepadForm() override;
 
 public:
 	bool init();
@@ -22,11 +22,7 @@ private:
 	void uninit();
 
 private:
-    QPlainTextEdit* m_board;
+	QPlainTextEdit* m_board;
 };
 
 #endif // __NOTEPADFORM_H__
-
-
-
-

@@ -8,8 +8,8 @@ class HelpForm : public QDialog
 	Q_OBJECT
 
 public:
-    HelpForm(QWidget* p=0, Qt::WindowFlags f=0);
-	virtual ~HelpForm();
+	HelpForm(QWidget* p = nullptr, Qt::WindowFlags f = Qt::WindowFlags(0));
+	~HelpForm() override;
 
 private:
 	void init();
@@ -19,7 +19,3 @@ private:
 };
 
 #endif // __HELPFORM_H__
-
-
-
-

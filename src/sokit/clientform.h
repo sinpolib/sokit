@@ -5,20 +5,21 @@
 #include "baseform.h"
 
 class ClientSkt;
+
 class ClientForm : public BaseForm
 {
 	Q_OBJECT
 
 public:
-    ClientForm(QWidget* p=0, Qt::WindowFlags f=0);
-	virtual ~ClientForm();
+	ClientForm(QWidget* p = nullptr, Qt::WindowFlags f = Qt::WindowFlags(0));
+	~ClientForm() override;
 
 protected:
-	virtual bool initForm();
-	virtual bool initHotkeys();
-	virtual void initConfig();
-	virtual void saveConfig();
-	virtual void send(const QString& data, const QString& dir);
+	bool initForm() override;
+	bool initHotkeys() override;
+	void initConfig() override;
+	void saveConfig() override;
+	void send(const QString& data, const QString& dir) override;
 
 private:
 	bool plug(bool istcp);
@@ -34,5 +35,3 @@ private:
 };
 
 #endif // __CLIENTFORM_H__
-
-

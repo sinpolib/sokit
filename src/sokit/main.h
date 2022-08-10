@@ -5,13 +5,13 @@
 #include <QApplication>
 #include <QMainWindow>
 
-class Sokit :public QApplication
+class Sokit : public QApplication
 {
 	Q_OBJECT
 
 public:
 	Sokit(int& argc, char** argv);
-	~Sokit();
+	~Sokit() override;
 
 	bool initTranslator();
 	bool initUI();

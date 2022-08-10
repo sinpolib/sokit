@@ -19,7 +19,7 @@
 #define SET_VAL_LANX ".lan"
 
 Sokit::Sokit(int& argc, char** argv)
-:QApplication(argc,argv)
+	: QApplication(argc, argv)
 {
 }
 
@@ -62,11 +62,11 @@ bool Sokit::initTranslator()
 
 	QStringList paths;
 	paths << "."
-        << "../share/" SET_APP_NAME
-        << "../share/apps/" SET_APP_NAME
+		<< "../share/" SET_APP_NAME
+		<< "../share/apps/" SET_APP_NAME
 		<< Setting::path();
 
-	foreach (QString p, paths)
+	foreach(QString p, paths)
 	{
 		if (m_trans.load(file, p, "", SET_VAL_LANX))
 		{
@@ -89,15 +89,15 @@ void Sokit::initFont()
 	int match = 0;
 
 	QString family = Setting::get(SET_SEC_CFG, SET_KEY_FTNM, "").trimmed();
-	QString size    = Setting::get(SET_SEC_CFG, SET_KEY_FTSZ, "").trimmed();
+	QString size = Setting::get(SET_SEC_CFG, SET_KEY_FTSZ, "").trimmed();
 
 	if (family.isEmpty() || fs.filter(family).isEmpty())
 	{
-		QStringList defs = translate("Sokit", "font").split(";", QString::SkipEmptyParts);
-		foreach (QString d, defs)
+		QStringList defs = translate("Sokit", "font").split(";", Qt::SkipEmptyParts);
+		foreach(QString d, defs)
 		{
 			family = d.section(',', 0, 0).trimmed();
-			size    = d.section(',', 1, 1).trimmed();
+			size = d.section(',', 1, 1).trimmed();
 
 			if (!family.isEmpty() && !fs.filter(family).isEmpty())
 			{
@@ -116,7 +116,9 @@ void Sokit::initFont()
 		font.setFamily(family);
 
 		if (db.isSmoothlyScalable(family))
-			font.setStyleStrategy((QFont::StyleStrategy)(QFont::PreferAntialias|QFont::PreferOutline|QFont::PreferQuality));
+			font.setStyleStrategy(
+				static_cast<QFont::StyleStrategy>(QFont::PreferAntialias | QFont::PreferOutline |
+					QFont::PreferQuality));
 
 		int nsize = size.toInt();
 		if (nsize > 0 && nsize < 20)
@@ -137,25 +139,25 @@ bool Sokit::initUI()
 	initTranslator();
 	initFont();
 
-	HelpForm* h = new HelpForm(&m_wnd, Qt::WindowCloseButtonHint);
+	auto h = new HelpForm(&m_wnd, Qt::WindowCloseButtonHint);
 
-	QShortcut* k = new QShortcut(QKeySequence(Qt::Key_F1), &m_wnd);
-	QShortcut* t = new QShortcut(QKeySequence(Qt::Key_F10), &m_wnd);
-    connect(k, SIGNAL(activated()), h, SLOT(exec()));
+	auto k = new QShortcut(QKeySequence(Qt::Key_F1), &m_wnd);
+	auto t = new QShortcut(QKeySequence(Qt::Key_F10), &m_wnd);
+	connect(k, SIGNAL(activated()), h, SLOT(exec()));
 	connect(t, SIGNAL(activated()), this, SLOT(ontop()));
 
 	m_wnd.setWindowTitle(translate("Sokit", "sokit -- F1 for help"));
 	m_wnd.setWindowIcon(QIcon(":/sokit.png"));
 
-	QWidget* pnl = new QWidget(&m_wnd);
+	auto pnl = new QWidget(&m_wnd);
 	m_wnd.setCentralWidget(pnl);
 
 	BaseForm* server = new ServerForm();
 	BaseForm* transf = new TransferForm();
 	BaseForm* client = new ClientForm();
-	NotepadForm* npd = new NotepadForm();
+	auto npd = new NotepadForm();
 
-	QTabWidget* tab = new QTabWidget(pnl);
+	auto tab = new QTabWidget(pnl);
 	tab->addTab(server, server->windowTitle());
 	tab->addTab(transf, transf->windowTitle());
 	tab->addTab(client, client->windowTitle());
@@ -183,7 +185,7 @@ void Sokit::ontop()
 	m_wnd.show();
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	Sokit a(argc, argv);
 
@@ -191,6 +193,6 @@ int main(int argc, char *argv[])
 		a.show();
 	else
 		a.close();
-	
+
 	return a.exec();
 }

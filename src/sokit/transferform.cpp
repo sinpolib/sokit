@@ -17,8 +17,8 @@
 #define PROP_EDIT "edit"
 #define PROP_DIRT "dirt"
 
-TransferForm::TransferForm(QWidget *parent, Qt::WindowFlags flags)
-: BaseForm(parent, flags),m_server(0)
+TransferForm::TransferForm(QWidget* parent, Qt::WindowFlags flags)
+	: BaseForm(parent, flags), m_server(nullptr)
 {
 	m_ui.setupUi(this);
 }
@@ -29,7 +29,7 @@ TransferForm::~TransferForm()
 	{
 		m_server->disconnect(this);
 		delete m_server;
-		m_server = NULL;
+		m_server = nullptr;
 
 		unlock();
 	}
@@ -40,12 +40,13 @@ TransferForm::~TransferForm()
 void TransferForm::initConfig()
 {
 	QString sst(SET_SEC_TRANS);
-	Setting::lord(sst+SET_KEY_CMBSA, SET_PFX_CMBITM, *m_ui.cmbSrcAddr, false);
-	Setting::lord(sst+SET_KEY_CMBDA, SET_PFX_CMBITM, *m_ui.cmbDstAddr);
-	Setting::lord(sst+SET_KEY_CMBSP, SET_PFX_CMBITM, *m_ui.cmbSrcPort);
-	Setting::lord(sst+SET_KEY_CMBDP, SET_PFX_CMBITM, *m_ui.cmbDstPort);
+	Setting::lord(sst + SET_KEY_CMBSA, SET_PFX_CMBITM, *m_ui.cmbSrcAddr, false);
+	Setting::lord(sst + SET_KEY_CMBDA, SET_PFX_CMBITM, *m_ui.cmbDstAddr);
+	Setting::lord(sst + SET_KEY_CMBSP, SET_PFX_CMBITM, *m_ui.cmbSrcPort);
+	Setting::lord(sst + SET_KEY_CMBDP, SET_PFX_CMBITM, *m_ui.cmbDstPort);
 
-	QString skl(SET_SEC_DIR); skl += SET_KEY_LOG;
+	QString skl(SET_SEC_DIR);
+	skl += SET_KEY_LOG;
 	skl = Setting::get(skl, SET_KEY_TRANS, SET_VAL_LGTAN);
 	setProperty(SET_SEC_DIR, skl);
 
@@ -56,12 +57,13 @@ void TransferForm::initConfig()
 void TransferForm::saveConfig()
 {
 	QString sst(SET_SEC_TRANS);
-	Setting::save(sst+SET_KEY_CMBSA, SET_PFX_CMBITM, *m_ui.cmbSrcAddr, false);
-	Setting::save(sst+SET_KEY_CMBDA, SET_PFX_CMBITM, *m_ui.cmbDstAddr);
-	Setting::save(sst+SET_KEY_CMBSP, SET_PFX_CMBITM, *m_ui.cmbSrcPort);
-	Setting::save(sst+SET_KEY_CMBDP, SET_PFX_CMBITM, *m_ui.cmbDstPort);
+	Setting::save(sst + SET_KEY_CMBSA, SET_PFX_CMBITM, *m_ui.cmbSrcAddr, false);
+	Setting::save(sst + SET_KEY_CMBDA, SET_PFX_CMBITM, *m_ui.cmbDstAddr);
+	Setting::save(sst + SET_KEY_CMBSP, SET_PFX_CMBITM, *m_ui.cmbSrcPort);
+	Setting::save(sst + SET_KEY_CMBDP, SET_PFX_CMBITM, *m_ui.cmbDstPort);
 
-	QString skl(SET_SEC_DIR); skl += SET_KEY_LOG;
+	QString skl(SET_SEC_DIR);
+	skl += SET_KEY_LOG;
 	Setting::set(skl, SET_KEY_TRANS, property(SET_SEC_DIR).toString());
 }
 
@@ -87,9 +89,9 @@ bool TransferForm::initForm()
 bool TransferForm::initHotkeys()
 {
 	bindFocus(m_ui.cmbSrcAddr, Qt::Key_Escape);
-	bindClick(m_ui.btnTrigger,  Qt::CTRL + Qt::Key_S);
-	bindSelect(m_ui.cmbType, 0, Qt::CTRL + Qt::Key_T);
-	bindSelect(m_ui.cmbType, 1, Qt::CTRL + Qt::Key_U);
+	bindClick(m_ui.btnTrigger, Qt::CTRL | Qt::Key_S);
+	bindSelect(m_ui.cmbType, 0, Qt::CTRL | Qt::Key_T);
+	bindSelect(m_ui.cmbType, 1, Qt::CTRL | Qt::Key_U);
 
 	return true;
 }
@@ -112,14 +114,14 @@ void TransferForm::trigger(bool start)
 			m_server->stop();
 			m_server->disconnect(this);
 			delete m_server;
-			m_server = NULL;
+			m_server = nullptr;
 		}
 
 		IPAddr sa, da;
 		if (start)
 		{
 			start = TK::popIPAddr(m_ui.cmbSrcAddr, m_ui.cmbSrcPort, sa) &&
-					TK::popIPAddr(m_ui.cmbDstAddr, m_ui.cmbDstPort, da);
+				TK::popIPAddr(m_ui.cmbDstAddr, m_ui.cmbDstPort, da);
 		}
 
 		if (start)
@@ -135,17 +137,18 @@ void TransferForm::trigger(bool start)
 				connect(m_server, SIGNAL(connOpen(const QString&)), this, SLOT(listerAdd(const QString&)));
 				connect(m_server, SIGNAL(connClose(const QString&)), this, SLOT(listerRemove(const QString&)));
 				connect(m_server, SIGNAL(message(const QString&)), this, SIGNAL(output(const QString&)));
-				connect(m_server, SIGNAL(dumpbin(const QString&,const char*,quint32)), this, SIGNAL(output(const QString&,const char*,quint32)));
+				connect(m_server, SIGNAL(dumpbin(const QString&,const char*,quint32)), this,
+				        SIGNAL(output(const QString&,const char*,quint32)));
 				connect(m_server, SIGNAL(countRecv(qint32)), this, SLOT(countRecv(qint32)));
 				connect(m_server, SIGNAL(countSend(qint32)), this, SLOT(countSend(qint32)));
 				connect(m_server, SIGNAL(stopped()), this, SLOT(stop()));
-				
+
 				start = m_server->start(sa.ip, sa.port, da.ip, da.port);
 				if (!start)
 				{
 					m_server->disconnect(this);
 					delete m_server;
-					m_server = NULL;
+					m_server = nullptr;
 				}
 			}
 			else
@@ -166,7 +169,7 @@ void TransferForm::trigger(bool start)
 	if (start)
 	{
 		TK::pushIPAddr(m_ui.cmbSrcPort, m_ui.cmbSrcAddr);
-		TK::pushIPAddr(0, m_ui.cmbDstPort);
+		TK::pushIPAddr(nullptr, m_ui.cmbDstPort);
 	}
 	else
 	{
@@ -183,7 +186,7 @@ void TransferForm::send(const QString& data, const QString& dir)
 {
 	bool s2d = dir.startsWith('S');
 
-	if (m_server &&lock(1000))
+	if (m_server && lock(1000))
 	{
 		QStringList list;
 		listerSelected(list);
@@ -194,12 +197,3 @@ void TransferForm::send(const QString& data, const QString& dir)
 		unlock();
 	}
 }
-
-
-
-
-
-
-
-
-

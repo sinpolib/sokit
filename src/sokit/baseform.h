@@ -8,18 +8,23 @@
 
 class QLabel;
 class QListWidget;
+
 class BaseForm : public QWidget
 {
 	Q_OBJECT
 
 public:
-    BaseForm(QWidget* p=0, Qt::WindowFlags f=0);
-	virtual ~BaseForm();
+	BaseForm(QWidget* p = nullptr, Qt::WindowFlags f = Qt::WindowFlags(0));
+	~BaseForm() override;
 
 	bool init();
 
 protected:
-	bool lock() { m_door.lock(); return true; };
+	bool lock()
+	{
+		m_door.lock();
+		return true;
+	};
 	bool lock(qint32 w) { return m_door.tryLock(w); };
 	void unlock() { m_door.unlock(); };
 
@@ -37,7 +42,10 @@ protected:
 	virtual bool initHotkeys() =0;
 	virtual void initConfig() =0;
 	virtual void saveConfig() =0;
-    virtual void kill(QStringList& /*list*/) {};
+
+	virtual void kill(QStringList& /*list*/)
+	{
+	};
 	virtual void send(const QString& data, const QString& dir) =0;
 
 signals:
@@ -72,5 +80,3 @@ private:
 };
 
 #endif // __BASEFORM_H__
-
-

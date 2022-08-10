@@ -7,8 +7,8 @@
 
 #define MAXBUFFER 1024*1024
 
-ServerSkt::ServerSkt(QObject *parent)
-: QObject(parent),m_port(0)
+ServerSkt::ServerSkt(QObject* parent)
+	: QObject(parent), m_port(0)
 {
 	m_started = false;
 }
@@ -30,16 +30,17 @@ bool ServerSkt::start(const QHostAddress& ip, quint16 port)
 	QString msg("start %1 server %2!");
 	if (!m_started)
 	{
-		msg = msg.arg(name(),"failed");
+		msg = msg.arg(name(), "failed");
 		if (!m_error.isEmpty())
-		{	msg += " error:[";
+		{
+			msg += " error:[";
 			msg += m_error;
 			msg += "].";
 		}
 	}
 	else
 	{
-		msg = msg.arg(name(),"successfully");
+		msg = msg.arg(name(), "successfully");
 	}
 
 	show(msg);
@@ -138,7 +139,7 @@ void ServerSkt::send(const QString& key, const QString& data)
 		QByteArray bin;
 
 		if (!TK::ascii2bin(data, bin, err))
-			show("bad data format to send: "+err);
+			show("bad data format to send: " + err);
 		else
 			send(v, bin);
 	}
@@ -146,7 +147,7 @@ void ServerSkt::send(const QString& key, const QString& data)
 
 void ServerSkt::dump(const char* buf, qint32 len, bool isSend, const QString& key)
 {
-	emit dumpbin(QString("DAT %1 %2").arg(isSend?"<---":"--->",key), buf, (quint32)len);
+	emit dumpbin(QString("DAT %1 %2").arg(isSend ? "<---" : "--->", key), buf, static_cast<quint32>(len));
 }
 
 void ServerSkt::show(const QString& msg)
@@ -154,8 +155,8 @@ void ServerSkt::show(const QString& msg)
 	emit message(msg);
 }
 
-ServerSktTcp::ServerSktTcp(QObject *parent)
-:ServerSkt(parent)
+ServerSktTcp::ServerSktTcp(QObject* parent)
+	: ServerSkt(parent)
 {
 }
 
@@ -172,18 +173,15 @@ bool ServerSktTcp::open()
 		connect(&m_server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 		return true;
 	}
-	else
-	{
-		setError(QString("%1, %2").arg(m_server.serverError()).arg(m_server.errorString()));
-	}
+	setError(QString("%1, %2").arg(m_server.serverError()).arg(m_server.errorString()));
 
 	return false;
 }
 
 bool ServerSktTcp::close(void* cookie)
 {
-	Conn* conn = (Conn*)cookie;
-	
+	auto conn = static_cast<Conn*>(cookie);
+
 	if (conn->client)
 		conn->client->disconnect(this);
 
@@ -195,7 +193,7 @@ bool ServerSktTcp::close(void* cookie)
 
 void ServerSktTcp::close(QObject* obj)
 {
-	Conn* conn = (Conn*)obj->property(PROP_CONN).value<void*>();
+	auto conn = static_cast<Conn*>(obj->property(PROP_CONN).value<void*>());
 	if (!conn) return;
 
 	unsetCookie(conn->key);
@@ -204,7 +202,7 @@ void ServerSktTcp::close(QObject* obj)
 
 void ServerSktTcp::error()
 {
-	QTcpSocket* s = qobject_cast<QTcpSocket*>(sender());
+	auto s = qobject_cast<QTcpSocket*>(sender());
 
 	show(QString("TCP socket error %1, %2").arg(s->error()).arg(s->errorString()));
 
@@ -219,23 +217,23 @@ void ServerSktTcp::close()
 
 void ServerSktTcp::newConnection()
 {
-	QTcpServer* server = qobject_cast<QTcpServer*>(sender());
+	auto server = qobject_cast<QTcpServer*>(sender());
 	if (!server) return;
 
 	QTcpSocket* client = server->nextPendingConnection();
 	while (client)
 	{
-		Conn* conn = new Conn;
+		auto conn = new Conn;
 		if (!conn)
 		{
 			client->deleteLater();
 		}
 		else
 		{
-			client->setProperty(PROP_CONN, qVariantFromValue((void*)conn));
+			client->setProperty(PROP_CONN, QVariant::fromValue(static_cast<void*>(conn)));
 
 			conn->client = client;
-			conn->key = TK::ipstr(client->peerAddress(),client->peerPort(), true);
+			conn->key = TK::ipstr(client->peerAddress(), client->peerPort(), true);
 
 			connect(client, SIGNAL(readyRead()), this, SLOT(newData()));
 			connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(close(QObject*)));
@@ -250,10 +248,10 @@ void ServerSktTcp::newConnection()
 
 void ServerSktTcp::newData()
 {
-	QTcpSocket* client = qobject_cast<QTcpSocket*>(sender());
+	auto client = qobject_cast<QTcpSocket*>(sender());
 	if (!client) return;
 
-	Conn* conn = (Conn*)client->property(PROP_CONN).value<void*>();
+	auto conn = static_cast<Conn*>(client->property(PROP_CONN).value<void*>());
 	if (!conn) return;
 
 	qint64 bufLen = client->bytesAvailable();
@@ -266,7 +264,7 @@ void ServerSktTcp::newData()
 	while (ioLen > 0)
 	{
 		readLen += ioLen;
-		ioLen = client->read(buf+readLen, bufLen-readLen);
+		ioLen = client->read(buf + readLen, bufLen - readLen);
 	}
 
 	if (ioLen >= 0)
@@ -280,9 +278,9 @@ void ServerSktTcp::newData()
 
 void ServerSktTcp::send(void* cookie, const QByteArray& bin)
 {
-	Conn* conn = (Conn*)cookie;
+	auto conn = static_cast<Conn*>(cookie);
 
-	const char *  src = bin.constData(); 
+	const char* src = bin.constData();
 	qint64 srcLen = bin.length();
 
 	qint64 writeLen = 0;
@@ -291,13 +289,13 @@ void ServerSktTcp::send(void* cookie, const QByteArray& bin)
 	while (ioLen > 0)
 	{
 		writeLen += ioLen;
-		ioLen = conn->client->write(src+writeLen, srcLen-writeLen);
+		ioLen = conn->client->write(src + writeLen, srcLen - writeLen);
 	}
 
 	if (writeLen != srcLen)
 	{
 		show(QString("failed to send data to %1:%2 [%3]")
-			.arg(addr().toString()).arg(port()).arg(writeLen));
+		     .arg(addr().toString()).arg(port()).arg(writeLen));
 		return;
 	}
 
@@ -305,8 +303,8 @@ void ServerSktTcp::send(void* cookie, const QByteArray& bin)
 	dump(src, srcLen, true, conn->key);
 }
 
-ServerSktUdp::ServerSktUdp(QObject *parent)
-:ServerSkt(parent)
+ServerSktUdp::ServerSktUdp(QObject* parent)
+	: ServerSkt(parent)
 {
 }
 
@@ -318,7 +316,7 @@ ServerSktUdp::~ServerSktUdp()
 
 void ServerSktUdp::error()
 {
-	QUdpSocket* s = qobject_cast<QUdpSocket*>(sender());
+	auto s = qobject_cast<QUdpSocket*>(sender());
 
 	show(QString("UDP socket error %1, %2").arg(s->error()).arg(s->errorString()));
 }
@@ -334,17 +332,14 @@ bool ServerSktUdp::open()
 		m_timer.start(2000);
 		return true;
 	}
-	else
-	{
-		setError(QString("%1, %2").arg(m_server.error()).arg(m_server.errorString()));
-	}
+	setError(QString("%1, %2").arg(m_server.error()).arg(m_server.errorString()));
 
 	return false;
 }
 
 bool ServerSktUdp::close(void* cookie)
 {
-	delete (Conn*)cookie;
+	delete static_cast<Conn*>(cookie);
 	return true;
 }
 
@@ -358,33 +353,34 @@ void ServerSktUdp::close()
 
 void ServerSktUdp::newData()
 {
-	QUdpSocket* s = qobject_cast<QUdpSocket*>(sender());
+	auto s = qobject_cast<QUdpSocket*>(sender());
 	if (!s) return;
 
 	qint64 bufLen = s->pendingDatagramSize();
 	char* buf = TK::createBuffer(bufLen, MAXBUFFER);
 	if (!buf) return;
 
-	QHostAddress addr; quint16 port(0);
+	QHostAddress addr;
+	quint16 port(0);
 
 	qint64 readLen = 0;
 	qint64 ioLen = s->readDatagram(buf, bufLen, &addr, &port);
 
 	//while (ioLen > 0)
 	//{
-		readLen += ioLen;
+	readLen += ioLen;
 	//	ioLen = s->readDatagram(buf+readLen, bufLen-readLen, &addr, &port);
 	//}
 
 	if (ioLen >= 0)
 	{
-		Conn* conn = (Conn*)getCookie(TK::ipstr(addr, port, false));
+		auto conn = static_cast<Conn*>(getCookie(TK::ipstr(addr, port, false)));
 		if (!conn)
 		{
 			conn = new Conn;
 			if (conn)
 			{
-				conn->key  = TK::ipstr(addr, port, false);
+				conn->key = TK::ipstr(addr, port, false);
 				conn->addr = addr;
 				conn->port = port;
 				setCookie(conn->key, conn);
@@ -405,9 +401,9 @@ void ServerSktUdp::newData()
 
 void ServerSktUdp::send(void* cookie, const QByteArray& bin)
 {
-	Conn* conn = (Conn*)cookie;
+	auto conn = static_cast<Conn*>(cookie);
 
-	const char*  src = bin.constData(); 
+	const char* src = bin.constData();
 	qint64 srcLen = bin.length();
 
 	qint64 writeLen = 0;
@@ -417,14 +413,15 @@ void ServerSktUdp::send(void* cookie, const QByteArray& bin)
 	{
 		writeLen += ioLen;
 
-		ioLen = (writeLen >= srcLen) ? 0 :
-				m_server.writeDatagram(src+writeLen, srcLen-writeLen, conn->addr, conn->port);
+		ioLen = (writeLen >= srcLen)
+			        ? 0
+			        : m_server.writeDatagram(src + writeLen, srcLen - writeLen, conn->addr, conn->port);
 	}
 
 	if (writeLen != srcLen)
 	{
 		show(QString("failed to send data to %1:%2 [%3]")
-			.arg(conn->addr.toString()).arg(conn->port).arg(writeLen));
+		     .arg(conn->addr.toString()).arg(conn->port).arg(writeLen));
 		return;
 	}
 
@@ -443,11 +440,10 @@ void ServerSktUdp::check()
 
 		void* c = getCookie(k);
 
-		if (c && (((Conn*)c)->stamp.addSecs(120) < QDateTime::currentDateTime()))
+		if (c && (static_cast<Conn*>(c)->stamp.addSecs(120) < QDateTime::currentDateTime()))
 		{
 			close(c);
 			unsetCookie(k);
 		}
 	}
 }
-
