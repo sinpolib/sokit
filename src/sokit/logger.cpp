@@ -13,8 +13,8 @@
 #define SET_MAX_LOGITM  100
 #define SET_MAX_LOGTRM  30
 
-Logger::Logger(QObject *parent)
-: QObject(parent),m_chkWrite(0),m_treeOut(0),m_textOut(0)
+Logger::Logger(QObject* parent)
+	: QObject(parent), m_chkWrite(nullptr), m_treeOut(nullptr), m_textOut(nullptr)
 {
 }
 
@@ -37,26 +37,26 @@ void Logger::init(QTreeWidget* o, QCheckBox* w, QPlainTextEdit* d)
 	if (m_chkWrite)
 		m_chkWrite->disconnect(this);
 
-    m_treeOut = o;
+	m_treeOut = o;
 	m_textOut = d;
-    m_chkWrite = w;
+	m_chkWrite = w;
 
 	if (m_treeOut && m_textOut && m_chkWrite)
 	{
 		QList<QKeySequence> ks;
-		ks << QKeySequence(Qt::CTRL + Qt::Key_D);
+		ks << QKeySequence(Qt::CTRL | Qt::Key_D);
 
-		QAction* copy = new QAction(tr("Copy"), this);
+		auto copy = new QAction(tr("Copy"), this);
 		copy->setShortcuts(QKeySequence::Copy);
 		connect(copy, SIGNAL(triggered()), this, SLOT(copy()));
 
-		QAction* clear = new QAction(tr("Clear"), this);
+		auto clear = new QAction(tr("Clear"), this);
 		clear->setShortcuts(ks);
 		connect(clear, SIGNAL(triggered()), this, SIGNAL(clearLog()));
 
-		QAction* all = new QAction(tr("Select All"), this);
+		auto all = new QAction(tr("Select All"), this);
 		all->setShortcuts(QKeySequence::SelectAll);
-        connect(all, SIGNAL(triggered()), m_textOut, SLOT(selectAll()));
+		connect(all, SIGNAL(triggered()), m_textOut, SLOT(selectAll()));
 
 		m_cmlog.addAction(copy);
 		m_cmlog.addSeparator();
@@ -90,7 +90,7 @@ void Logger::syncOutput()
 
 void Logger::ctxmenu(const QPoint& pos)
 {
-	if (sender() == (QObject*)m_treeOut)
+	if (sender() == static_cast<QObject*>(m_treeOut))
 		m_cmlog.exec(m_treeOut->mapToGlobal(pos));
 	else
 		m_cmtxt.exec(m_textOut->mapToGlobal(pos));
@@ -98,7 +98,7 @@ void Logger::ctxmenu(const QPoint& pos)
 
 void Logger::copy()
 {
-	if (sender() == (QObject*)m_treeOut)
+	if (sender() == static_cast<QObject*>(m_treeOut))
 	{
 		QList<QTreeWidgetItem*> list = m_treeOut->selectedItems();
 		if (!list.isEmpty())
@@ -118,17 +118,20 @@ const QString Logger::getLogFileName()
 		if (!m_dir.isEmpty())
 		{
 			QDir d;
-			if (d.exists(m_dir) || d.mkpath(m_dir)) {
+			if (d.exists(m_dir) || d.mkpath(m_dir))
+			{
 				i = 0;
 				break;
 			}
 		}
 
-        m_dir = Setting::path() + "/" + property(SET_SEC_DIR).toString();
+		m_dir = Setting::path() + "/" + property(SET_SEC_DIR).toString();
 	}
 
-	return (i==2) ? QString() : m_dir + QDir::separator() + 
-		QDate::currentDate().toString("yyyyMMdd.log");
+	return (i == 2)
+		       ? QString()
+		       : m_dir + QDir::separator() +
+		       QDate::currentDate().toString("yyyyMMdd.log");
 }
 
 void Logger::writeLogFile(const QString& info)
@@ -139,14 +142,14 @@ void Logger::writeLogFile(const QString& info)
 	m_file.close();
 	m_file.setFileName(getLogFileName());
 
-	if (m_file.open(QIODevice::Append|
-					QIODevice::WriteOnly|
-					QIODevice::Text))
+	if (m_file.open(QIODevice::Append |
+		QIODevice::WriteOnly |
+		QIODevice::Text))
 	{
 		QByteArray a(info.toUtf8());
 
 		const char* d = a.data();
-		for (int n=a.size(); n>0;)
+		for (int n = a.size(); n > 0;)
 		{
 			int w = m_file.write(d, n);
 
@@ -184,7 +187,7 @@ void Logger::pack()
 
 QTreeWidgetItem* Logger::appendLogEntry(QTreeWidgetItem* p, const QString& t)
 {
-	QTreeWidgetItem* res = new QTreeWidgetItem(p);
+	auto res = new QTreeWidgetItem(p);
 	if (res)
 	{
 		res->setText(0, t);
@@ -204,16 +207,16 @@ QTreeWidgetItem* Logger::appendLogEntry(QTreeWidgetItem* p, const QString& t)
 
 void Logger::output(const QString& title, const QString& info)
 {
-	QTreeWidgetItem* it = new QTreeWidgetItem(0);
+	auto it = new QTreeWidgetItem(0);
 	if (!it) return;
 
 	QString lab(QTime::currentTime().toString("HH:mm:ss "));
-	
+
 	lab += title;
 	lab += ' ';
 	lab += info;
 
-	appendLogEntry(0, lab);
+	appendLogEntry(nullptr, lab);
 
 	pack();
 
@@ -226,7 +229,7 @@ void Logger::output(const QString& title, const QString& info)
 void Logger::output(const QString& title, const char* buf, quint32 len)
 {
 	QString lab(QTime::currentTime().toString("HH:mm:ss "));
-	
+
 	QTextStream out(&lab);
 
 	out << title
@@ -235,7 +238,7 @@ void Logger::output(const QString& title, const char* buf, quint32 len)
 
 	QString hex = TK::bin2hex(buf, len);
 
-	QTreeWidgetItem* it = appendLogEntry(0, lab);
+	QTreeWidgetItem* it = appendLogEntry(nullptr, lab);
 	if (it)
 	{
 		appendLogEntry(it, hex);

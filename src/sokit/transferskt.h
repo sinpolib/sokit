@@ -10,13 +10,13 @@
 
 class TransferSkt : public QObject
 {
-	typedef QHash<QString, void*> OBJMAP;
+	using OBJMAP = QHash<QString, void*>;
 
 	Q_OBJECT
 
 public:
-	TransferSkt(QObject *parent=0);
-	virtual ~TransferSkt();
+	TransferSkt(QObject* parent = nullptr);
+	~TransferSkt() override;
 
 	virtual QString name() const { return "General"; };
 
@@ -43,7 +43,8 @@ signals:
 	void countSend(qint32 bytes);
 
 protected:
-	enum DIR { TS2D, TD2S, SS2D, SD2S, }; 
+	enum DIR { TS2D, TD2S, SS2D, SD2S, };
+
 	void dump(const char* buf, qint32 len, DIR dir, const QString& key);
 	void show(const QString& msg);
 
@@ -56,7 +57,7 @@ protected:
 	void setCookie(const QString& k, void* v);
 	void unsetCookie(const QString& k);
 	void* getCookie(const QString& k);
-	
+
 
 	virtual bool open() =0;
 	virtual bool close(void* cookie) =0;
@@ -76,26 +77,26 @@ private:
 
 class TransferSktTcp : public TransferSkt
 {
-	typedef struct _Conn
+	using Conn = struct _Conn
 	{
 		QTcpSocket* src;
 		QTcpSocket* dst;
 		QString key;
-	} Conn;
+	};
 
 	Q_OBJECT
 
 public:
-	TransferSktTcp(QObject *parent=0);
-	virtual ~TransferSktTcp();
+	TransferSktTcp(QObject* parent = nullptr);
+	~TransferSktTcp() override;
 
-	virtual QString name() const { return "TCP"; };
+	QString name() const override { return "TCP"; };
 
 protected:
-	virtual bool open();
-	virtual bool close(void* cookie);
-	virtual void send(void* cookie, bool s2d, const QByteArray& bin);
-	virtual void close();
+	bool open() override;
+	bool close(void* cookie) override;
+	void send(void* cookie, bool s2d, const QByteArray& bin) override;
+	void close() override;
 
 private slots:
 	void newConnection();
@@ -111,28 +112,28 @@ private:
 
 class TransferSktUdp : public TransferSkt
 {
-	typedef struct _Conn
+	using Conn = struct _Conn
 	{
 		QUdpSocket* dst;
 		QHostAddress addr;
 		quint16 port;
 		QDateTime stamp;
 		QString key;
-	} Conn;
+	};
 
 	Q_OBJECT
 
 public:
-	TransferSktUdp(QObject *parent=0);
-	virtual ~TransferSktUdp();
+	TransferSktUdp(QObject* parent = nullptr);
+	~TransferSktUdp() override;
 
-	virtual QString name() const { return "UDP"; };
+	QString name() const override { return "UDP"; };
 
 protected:
-	virtual bool open();
-	virtual bool close(void* cookie);
-	virtual void send(void* cookie, bool s2d, const QByteArray& bin);
-	virtual void close();
+	bool open() override;
+	bool close(void* cookie) override;
+	void send(void* cookie, bool s2d, const QByteArray& bin) override;
+	void close() override;
 
 private slots:
 	void newData();
@@ -146,4 +147,3 @@ private:
 };
 
 #endif // __TRANSFERSKT_H__
-

@@ -17,7 +17,7 @@
 #define PROP_TARG "targ"
 
 BaseForm::BaseForm(QWidget* p, Qt::WindowFlags f)
-:QWidget(p, f),m_cntRecv(0),m_cntSend(0),m_labRecv(0),m_labSend(0),m_cnlist(0)
+	: QWidget(p, f), m_cntRecv(0), m_cntSend(0), m_labRecv(nullptr), m_labSend(nullptr), m_cnlist(nullptr)
 {
 }
 
@@ -52,26 +52,27 @@ void BaseForm::initLogger(QCheckBox* w, QToolButton* c, QTreeWidget* o, QPlainTe
 
 	bindFocus(o, Qt::Key_F3);
 
-	QShortcut* wr = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_W), this);
-	QShortcut* cl = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_D), this);
-	QShortcut* sl = new QShortcut(QKeySequence(Qt::Key_F4), this);
+	auto wr = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_W), this);
+	auto cl = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_D), this);
+	auto sl = new QShortcut(QKeySequence(Qt::Key_F4), this);
 
-	sl->setProperty(PROP_TARG, qVariantFromValue((void*)d));
+	sl->setProperty(PROP_TARG, QVariant::fromValue(static_cast<void*>(d)));
 
 	connect(wr, SIGNAL(activated()), w, SLOT(click()));
 	connect(sl, SIGNAL(activated()), this, SLOT(hotOutput()));
 	connect(cl, SIGNAL(activated()), this, SLOT(clear()));
 
 	connect(this, SIGNAL(output(const QString&)), &m_logger, SLOT(output(const QString&)));
-	connect(this, SIGNAL(output(const QString&, const char*, quint32)), &m_logger, SLOT(output(const QString&, const char*, quint32)));
+	connect(this, SIGNAL(output(const QString&, const char*, quint32)), &m_logger,
+	        SLOT(output(const QString&, const char*, quint32)));
 }
 
 void BaseForm::initLister(QToolButton* a, QToolButton* k, QListWidget* l)
 {
 	m_cnlist = l;
 
-	QShortcut* sk = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_K), this);
-	QShortcut* sa = new QShortcut(QKeySequence(Qt::ALT  + Qt::Key_A), this);
+	auto sk = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_K), this);
+	auto sa = new QShortcut(QKeySequence(Qt::ALT | Qt::Key_A), this);
 
 	connect(sk, SIGNAL(activated()), this, SLOT(kill()));
 	connect(sa, SIGNAL(activated()), m_cnlist, SLOT(selectAll()));
@@ -84,33 +85,33 @@ void BaseForm::initLister(QToolButton* a, QToolButton* k, QListWidget* l)
 
 void BaseForm::bindBuffer(qint32 id, QLineEdit* e, QToolButton* s, QComboBox* d)
 {
-	s->setProperty(PROP_EDIT, qVariantFromValue((void*)e));
-	s->setProperty(PROP_DIRT, qVariantFromValue((void*)d));
+	s->setProperty(PROP_EDIT, QVariant::fromValue(static_cast<void*>(e)));
+	s->setProperty(PROP_DIRT, QVariant::fromValue(static_cast<void*>(d)));
 
 	connect(s, SIGNAL(released()), this, SLOT(send()));
 
-	bindClick(s, Qt::Key_0 + id + Qt::CTRL);
-	bindFocus(e, Qt::Key_0 + id + Qt::ALT);
-	bindFocus(d, Qt::Key_0 + id + Qt::CTRL + Qt::SHIFT);
+	bindClick(s, Qt::Key_0 + id | Qt::CTRL);
+	bindFocus(e, Qt::Key_0 + id | Qt::ALT);
+	bindFocus(d, Qt::Key_0 + id | Qt::CTRL | Qt::SHIFT);
 }
 
 void BaseForm::bindFocus(QWidget* w, qint32 k)
 {
-	QShortcut* s = new QShortcut(QKeySequence(k), this);
-	s->setProperty(PROP_TARG, qVariantFromValue((void*)w));
+	auto s = new QShortcut(QKeySequence(k), this);
+	s->setProperty(PROP_TARG, QVariant::fromValue(static_cast<void*>(w)));
 	connect(s, SIGNAL(activated()), this, SLOT(focus()));
 }
 
 void BaseForm::bindClick(QAbstractButton* b, qint32 k)
 {
-	QShortcut* s = new QShortcut(QKeySequence(k), this);
+	auto s = new QShortcut(QKeySequence(k), this);
 	connect(s, SIGNAL(activated()), b, SLOT(click()));
 }
 
 void BaseForm::bindSelect(QComboBox* b, qint32 i, qint32 k)
 {
-	QShortcut* s = new QShortcut(QKeySequence(k), this);
-	s->setProperty(PROP_TARG, qVariantFromValue((void*)b));
+	auto s = new QShortcut(QKeySequence(k), this);
+	s->setProperty(PROP_TARG, QVariant::fromValue(static_cast<void*>(b)));
 	s->setObjectName(QString::number(i));
 
 	connect(s, SIGNAL(activated()), this, SLOT(select()));
@@ -118,13 +119,13 @@ void BaseForm::bindSelect(QComboBox* b, qint32 i, qint32 k)
 
 void BaseForm::focus()
 {
-	QWidget* w = (QWidget*)sender()->property(PROP_TARG).value<void*>();
+	auto w = static_cast<QWidget*>(sender()->property(PROP_TARG).value<void*>());
 	if (w) w->setFocus(Qt::TabFocusReason);
 }
 
 void BaseForm::hotOutput()
 {
-	QPlainTextEdit* t = (QPlainTextEdit*)sender()->property(PROP_TARG).value<void*>();
+	auto t = static_cast<QPlainTextEdit*>(sender()->property(PROP_TARG).value<void*>());
 	if (t)
 	{
 		t->setFocus(Qt::TabFocusReason);
@@ -134,7 +135,7 @@ void BaseForm::hotOutput()
 
 void BaseForm::select()
 {
-	QComboBox* b = (QComboBox*)sender()->property(PROP_TARG).value<void*>();
+	auto b = static_cast<QComboBox*>(sender()->property(PROP_TARG).value<void*>());
 	if (b && b->isEnabled())
 	{
 		qint32 i = sender()->objectName().toInt();
@@ -153,7 +154,7 @@ void BaseForm::countRecv(qint32 bytes)
 	if (bytes < 0)
 		m_cntRecv = 0;
 	else
-		m_cntRecv += bytes;		
+		m_cntRecv += bytes;
 
 	m_labRecv->setText(QString::number(m_cntRecv));
 }
@@ -170,10 +171,10 @@ void BaseForm::countSend(qint32 bytes)
 
 void BaseForm::send()
 {
-	QLineEdit* e = (QLineEdit*)sender()->property(PROP_EDIT).value<void*>();
-	QComboBox* d = (QComboBox*)sender()->property(PROP_DIRT).value<void*>();
+	auto e = static_cast<QLineEdit*>(sender()->property(PROP_EDIT).value<void*>());
+	auto d = static_cast<QComboBox*>(sender()->property(PROP_DIRT).value<void*>());
 	if (e)
-		send(e->text(), (d?d->currentText():""));
+		send(e->text(), (d ? d->currentText() : ""));
 }
 
 void BaseForm::clear()
@@ -222,8 +223,7 @@ void BaseForm::listerRemove(const QString& caption)
 	while (i--)
 	{
 		QListWidgetItem* itm = m_cnlist->item(i);
-		if (itm && itm->text()==caption)
+		if (itm && itm->text() == caption)
 			delete m_cnlist->takeItem(i);
 	}
 }
-

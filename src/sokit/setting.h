@@ -13,6 +13,7 @@
 
 class QComboBox;
 class QSettings;
+
 class Setting
 {
 public:
@@ -20,15 +21,14 @@ public:
 	static QString get(const QString& section, const QString& key, const QString& def);
 
 	static QString path();
-	static void save(const QString& section, const QString& prefix, const QComboBox& cmb, bool all=true);
-	static void lord(const QString& section, const QString& prefix, QComboBox& cmb, bool all=true);
+	static void save(const QString& section, const QString& prefix, const QComboBox& cmb, bool all = true);
+	static void lord(const QString& section, const QString& prefix, QComboBox& cmb, bool all = true);
 
 	static void flush();
-	
+
 private:
 	Setting();
 	static QSettings& storage();
 };
 
 #endif // __SETTING_H__
-

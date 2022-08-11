@@ -12,7 +12,7 @@
 #define SET_VAL_LGCLT  "log_client"
 
 ClientForm::ClientForm(QWidget* p, Qt::WindowFlags f)
-:BaseForm(p, f),m_client(0)
+	: BaseForm(p, f), m_client(nullptr)
 {
 	m_ui.setupUi(this);
 }
@@ -28,10 +28,10 @@ bool ClientForm::initForm()
 	initCounter(m_ui.labRecv, m_ui.labSend);
 	initLogger(m_ui.chkLog, m_ui.btnClear, m_ui.treeOutput, m_ui.txtOutput);
 
-	bindBuffer(0, m_ui.edtBuf0, m_ui.btnSend0, 0);
-	bindBuffer(1, m_ui.edtBuf1, m_ui.btnSend1, 0);
-	bindBuffer(2, m_ui.edtBuf2, m_ui.btnSend2, 0);
-	bindBuffer(3, m_ui.edtBuf3, m_ui.btnSend3, 0);
+	bindBuffer(0, m_ui.edtBuf0, m_ui.btnSend0, nullptr);
+	bindBuffer(1, m_ui.edtBuf1, m_ui.btnSend1, nullptr);
+	bindBuffer(2, m_ui.edtBuf2, m_ui.btnSend2, nullptr);
+	bindBuffer(3, m_ui.edtBuf3, m_ui.btnSend3, nullptr);
 
 	connect(m_ui.btnTcp, SIGNAL(clicked(bool)), this, SLOT(trigger(bool)));
 	connect(m_ui.btnUdp, SIGNAL(clicked(bool)), this, SLOT(trigger(bool)));
@@ -42,10 +42,11 @@ bool ClientForm::initForm()
 void ClientForm::initConfig()
 {
 	QString ssc(SET_SEC_CLT);
-	Setting::lord(ssc+SET_KEY_CMBIP, SET_PFX_CMBITM, *m_ui.cmbAddr);
-	Setting::lord(ssc+SET_KEY_CMBPT, SET_PFX_CMBITM, *m_ui.cmbPort);
+	Setting::lord(ssc + SET_KEY_CMBIP, SET_PFX_CMBITM, *m_ui.cmbAddr);
+	Setting::lord(ssc + SET_KEY_CMBPT, SET_PFX_CMBITM, *m_ui.cmbPort);
 
-	QString skl(SET_SEC_DIR); skl += SET_KEY_LOG;
+	QString skl(SET_SEC_DIR);
+	skl += SET_KEY_LOG;
 	skl = Setting::get(skl, SET_KEY_CLT, SET_VAL_LGCLT);
 	setProperty(SET_SEC_DIR, skl);
 
@@ -55,29 +56,30 @@ void ClientForm::initConfig()
 void ClientForm::saveConfig()
 {
 	QString ssc(SET_SEC_CLT);
-	Setting::save(ssc+SET_KEY_CMBIP, SET_PFX_CMBITM, *m_ui.cmbAddr);
-	Setting::save(ssc+SET_KEY_CMBPT, SET_PFX_CMBITM, *m_ui.cmbPort);
+	Setting::save(ssc + SET_KEY_CMBIP, SET_PFX_CMBITM, *m_ui.cmbAddr);
+	Setting::save(ssc + SET_KEY_CMBPT, SET_PFX_CMBITM, *m_ui.cmbPort);
 
-	QString skl(SET_SEC_DIR); skl += SET_KEY_LOG;
+	QString skl(SET_SEC_DIR);
+	skl += SET_KEY_LOG;
 	Setting::set(skl, SET_KEY_CLT, property(SET_SEC_DIR).toString());
 }
 
 bool ClientForm::initHotkeys()
 {
 	bindFocus(m_ui.cmbAddr, Qt::Key_Escape);
-	bindClick(m_ui.btnTcp,  Qt::CTRL + Qt::Key_T);
-	bindClick(m_ui.btnUdp,  Qt::CTRL + Qt::Key_U);
+	bindClick(m_ui.btnTcp, Qt::CTRL | Qt::Key_T);
+	bindClick(m_ui.btnUdp, Qt::CTRL | Qt::Key_U);
 	return true;
 }
 
 void ClientForm::unplug()
 {
-	ClientSkt* client = 0;
+	ClientSkt* client = nullptr;
 
 	if (lock())
 	{
 		client = m_client;
-		m_client = NULL;
+		m_client = nullptr;
 		unlock();
 	}
 
@@ -87,13 +89,13 @@ void ClientForm::unplug()
 
 void ClientForm::unpluged()
 {
-	ClientSkt* c = qobject_cast<ClientSkt*>(sender());
+	auto c = qobject_cast<ClientSkt*>(sender());
 	if (!c) return;
 
 	if (lock())
 	{
-		if (c==m_client)
-			m_client = NULL;
+		if (c == m_client)
+			m_client = nullptr;
 
 		unlock();
 	}
@@ -114,14 +116,14 @@ void ClientForm::trigger(bool checked)
 	m_ui.cmbAddr->setDisabled(checked);
 	m_ui.cmbPort->setDisabled(checked);
 
-	QToolButton* btn = qobject_cast<QToolButton*>(sender());
-	if (checked && !plug(btn==m_ui.btnTcp))
+	auto btn = qobject_cast<QToolButton*>(sender());
+	if (checked && !plug(btn == m_ui.btnTcp))
 		btn->click();
 }
 
 bool ClientForm::plug(bool istcp)
 {
-	ClientSkt* skt = 0;
+	ClientSkt* skt = nullptr;
 
 	lock();
 
@@ -129,11 +131,11 @@ bool ClientForm::plug(bool istcp)
 	{
 		m_client->disconnect(this);
 		m_client->deleteLater();
-		m_client = NULL;
+		m_client = nullptr;
 	}
 
 	IPAddr addr;
-	bool res  = TK::popIPAddr(m_ui.cmbAddr, m_ui.cmbPort, addr);
+	bool res = TK::popIPAddr(m_ui.cmbAddr, m_ui.cmbPort, addr);
 
 	if (res)
 	{
@@ -150,10 +152,11 @@ bool ClientForm::plug(bool istcp)
 		{
 			connect(m_client, SIGNAL(unpluged()), this, SLOT(unpluged()));
 			connect(m_client, SIGNAL(message(const QString&)), this, SIGNAL(output(const QString&)));
-			connect(m_client, SIGNAL(dumpbin(const QString&,const char*,quint32)), this, SIGNAL(output(const QString&,const char*,quint32)));
+			connect(m_client, SIGNAL(dumpbin(const QString&,const char*,quint32)), this,
+			        SIGNAL(output(const QString&,const char*,quint32)));
 			connect(m_client, SIGNAL(countRecv(qint32)), this, SLOT(countRecv(qint32)));
 			connect(m_client, SIGNAL(countSend(qint32)), this, SLOT(countSend(qint32)));
-		
+
 			skt = m_client;
 		}
 	}
@@ -179,5 +182,3 @@ void ClientForm::send(const QString& data, const QString&)
 		unlock();
 	}
 }
-
-

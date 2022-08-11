@@ -8,8 +8,8 @@
 Setting::Setting()
 {
 	QString path(QDir::currentPath());
-    if (!QFileInfo(path).isWritable() ||
-        path == QDir::homePath ())
+	if (!QFileInfo(path).isWritable() ||
+		path == QDir::homePath())
 	{
 		QDir dir(QDir::home());
 		dir.mkdir("." SET_APP_NAME);
@@ -39,12 +39,12 @@ void Setting::flush()
 
 void Setting::set(const QString& section, const QString& key, const QString& val)
 {
-	storage().setValue(section+key, val);
+	storage().setValue(section + key, val);
 }
 
 QString Setting::get(const QString& section, const QString& key, const QString& def)
 {
-	return storage().value(section+key, def).toString();
+	return storage().value(section + key, def).toString();
 }
 
 void Setting::save(const QString& section, const QString& prefix, const QComboBox& cmb, bool all)
@@ -72,7 +72,7 @@ void Setting::save(const QString& section, const QString& prefix, const QComboBo
 			while (n--)
 			{
 				QString k = keys[n];
-				if ((k!=tkey) && k.startsWith(prefix))
+				if ((k != tkey) && k.startsWith(prefix))
 				{
 					QString v = store.value(k).toString().trimmed();
 					if (!v.isEmpty() && (-1 == cmb.findText(v)))
@@ -88,12 +88,12 @@ void Setting::save(const QString& section, const QString& prefix, const QComboBo
 			n = SET_MAX_CMBITM;
 
 		qint32 i = 0;
-		for (i=0; i<n; ++i)
-			store.setValue(prefix+QString::number(i), cmb.itemText(i));
+		for (i = 0; i < n; ++i)
+			store.setValue(prefix + QString::number(i), cmb.itemText(i));
 
 		n = (vals.count() > SET_MAX_CMBITM) ? SET_MAX_CMBITM : vals.count();
-		for (qint32 j=0; i<n; ++i,++j)
-			store.setValue(prefix+QString::number(i), vals[j]);
+		for (qint32 j = 0; i < n; ++i, ++j)
+			store.setValue(prefix + QString::number(i), vals[j]);
 	}
 
 	store.endGroup();
@@ -149,4 +149,3 @@ void Setting::lord(const QString& section, const QString& prefix, QComboBox& cmb
 
 	store.endGroup();
 }
-

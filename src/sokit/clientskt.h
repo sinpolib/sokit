@@ -9,8 +9,8 @@ class ClientSkt : public QObject
 	Q_OBJECT
 
 public:
-	ClientSkt(QObject *parent=0);
-	virtual ~ClientSkt();
+	ClientSkt(QObject* parent = nullptr);
+	~ClientSkt() override;
 
 	virtual QString name() const { return "General"; };
 
@@ -54,15 +54,15 @@ class ClientSktTcp : public ClientSkt
 	Q_OBJECT
 
 public:
-	ClientSktTcp(QObject *parent=0);
-	~ClientSktTcp();
+	ClientSktTcp(QObject* parent = nullptr);
+	~ClientSktTcp() override;
 
-	virtual QString name() const { return "TCP"; };
+	QString name() const override { return "TCP"; };
 
 protected:
-	virtual bool open();
-	virtual void close();
-	virtual void send(const QByteArray& bin);
+	bool open() override;
+	void close() override;
+	void send(const QByteArray& bin) override;
 
 private slots:
 	void asynConn();
@@ -79,15 +79,15 @@ class ClientSktUdp : public ClientSkt
 	Q_OBJECT
 
 public:
-	ClientSktUdp(QObject *parent=0);
-	~ClientSktUdp();
+	ClientSktUdp(QObject* parent = nullptr);
+	~ClientSktUdp() override;
 
-	virtual QString name() const { return "UDP"; };
+	QString name() const override { return "UDP"; };
 
 protected:
-	virtual bool open();
-	virtual void close();
-	virtual void send(const QByteArray& bin);
+	bool open() override;
+	void close() override;
+	void send(const QByteArray& bin) override;
 
 private slots:
 	void asynConn();
@@ -100,4 +100,3 @@ private:
 };
 
 #endif // __CLIENTSKT_H__
-

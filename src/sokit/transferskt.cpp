@@ -8,8 +8,8 @@
 
 #define MAXBUFFER 1024*1024
 
-TransferSkt::TransferSkt(QObject *parent)
-: QObject(parent),m_spt(0),m_dpt(0)
+TransferSkt::TransferSkt(QObject* parent)
+	: QObject(parent), m_spt(0), m_dpt(0)
 {
 }
 
@@ -32,16 +32,17 @@ bool TransferSkt::start(const QHostAddress& sip, quint16 spt, const QHostAddress
 	QString msg("start %1 transfer server %2!");
 	if (!res)
 	{
-		msg = msg.arg(name(),"failed");
+		msg = msg.arg(name(), "failed");
 		if (!m_error.isEmpty())
-		{	msg += " error:[";
+		{
+			msg += " error:[";
 			msg += m_error;
 			msg += "].";
 		}
 	}
 	else
 	{
-		msg = msg.arg(name(),"successfully");
+		msg = msg.arg(name(), "successfully");
 	}
 
 	show(msg);
@@ -135,26 +136,31 @@ void TransferSkt::send(const QString& key, bool s2d, const QString& data)
 		QByteArray bin;
 
 		if (!TK::ascii2bin(data, bin, err))
-			show("bad data format to send: "+err);
+			show("bad data format to send: " + err);
 		else
 			send(v, s2d, bin);
 	}
 }
 
-void TransferSkt::dump(const char* buf, qint32 len, TransferSkt::DIR dir, const QString& key)
+void TransferSkt::dump(const char* buf, qint32 len, DIR dir, const QString& key)
 {
 	QString title("TRN");
 	switch (dir)
 	{
-		case TS2D: title += " -->> "; break;
-		case TD2S: title += " <<-- "; break;
-		case SS2D: title += " --+> "; break;
-		case SD2S: title += " <+-- "; break;
-		default:   title += " ???? "; break;
+	case TS2D: title += " -->> ";
+		break;
+	case TD2S: title += " <<-- ";
+		break;
+	case SS2D: title += " --+> ";
+		break;
+	case SD2S: title += " <+-- ";
+		break;
+	default: title += " ???? ";
+		break;
 	}
 	title += key;
 
-	emit dumpbin(title, buf, (quint32)len);
+	emit dumpbin(title, buf, static_cast<quint32>(len));
 }
 
 void TransferSkt::show(const QString& msg)
@@ -162,8 +168,8 @@ void TransferSkt::show(const QString& msg)
 	emit message(msg);
 }
 
-TransferSktTcp::TransferSktTcp(QObject *parent)
-:TransferSkt(parent)
+TransferSktTcp::TransferSktTcp(QObject* parent)
+	: TransferSkt(parent)
 {
 }
 
@@ -180,18 +186,15 @@ bool TransferSktTcp::open()
 
 		return true;
 	}
-	else
-	{
-		setError(QString("%1, %2").arg(m_server.serverError()).arg(m_server.errorString()));
-	}
+	setError(QString("%1, %2").arg(m_server.serverError()).arg(m_server.errorString()));
 
 	return false;
 }
 
 bool TransferSktTcp::close(void* cookie)
 {
-	Conn* conn = (Conn*)cookie;
-	
+	auto conn = static_cast<Conn*>(cookie);
+
 	if (conn->src)
 		conn->src->disconnect(this);
 
@@ -209,7 +212,7 @@ void TransferSktTcp::close(QObject* obj)
 {
 	QMutexLocker locker(&m_door);
 
-	Conn* conn = (Conn*)obj->property(PROP_CONN).value<void*>();
+	auto conn = static_cast<Conn*>(obj->property(PROP_CONN).value<void*>());
 	if (!conn) return;
 
 	if (conn->src)
@@ -234,7 +237,7 @@ void TransferSktTcp::close(QObject* obj)
 
 void TransferSktTcp::error()
 {
-	QTcpSocket* s = qobject_cast<QTcpSocket*>(sender());
+	auto s = qobject_cast<QTcpSocket*>(sender());
 
 	show(QString("TCP socket error %1, %2").arg(s->error()).arg(s->errorString()));
 
@@ -249,20 +252,20 @@ void TransferSktTcp::close()
 
 void TransferSktTcp::newConnection()
 {
-	QTcpServer* svr = qobject_cast<QTcpServer*>(sender());
+	auto svr = qobject_cast<QTcpServer*>(sender());
 	if (!svr) return;
 
 	QTcpSocket* src = svr->nextPendingConnection();
 	while (src)
 	{
-		Conn* conn = new Conn;
+		auto conn = new Conn;
 		if (!conn)
 		{
 			src->deleteLater();
 		}
 		else
 		{
-			QTcpSocket* dst = new QTcpSocket();
+			auto dst = new QTcpSocket();
 			if (!dst)
 			{
 				delete conn;
@@ -270,12 +273,12 @@ void TransferSktTcp::newConnection()
 			}
 			else
 			{
-				src->setProperty(PROP_CONN, qVariantFromValue((void*)conn));
-				dst->setProperty(PROP_CONN, qVariantFromValue((void*)conn));
+				src->setProperty(PROP_CONN, QVariant::fromValue(static_cast<void*>(conn)));
+				dst->setProperty(PROP_CONN, QVariant::fromValue(static_cast<void*>(conn)));
 
 				conn->src = src;
 				conn->dst = dst;
-				conn->key = TK::ipstr(src->peerAddress(),src->peerPort());
+				conn->key = TK::ipstr(src->peerAddress(), src->peerPort());
 
 				connect(src, SIGNAL(readyRead()), this, SLOT(newData()));
 				connect(src, SIGNAL(destroyed(QObject*)), this, SLOT(close(QObject*)));
@@ -299,24 +302,24 @@ void TransferSktTcp::newConnection()
 
 void TransferSktTcp::asynConnection()
 {
-	QTcpSocket* s = qobject_cast<QTcpSocket*>(sender());
+	auto s = qobject_cast<QTcpSocket*>(sender());
 	if (!s) return;
 
-	Conn* conn = (Conn*)s->property(PROP_CONN).value<void*>();
+	auto conn = static_cast<Conn*>(s->property(PROP_CONN).value<void*>());
 	if (!conn) return;
 
 	show(QString("connection %1 to %2:%3 opened!")
-		.arg(conn->key, s->peerName()).arg(s->peerPort()));
+	     .arg(conn->key, s->peerName()).arg(s->peerPort()));
 }
 
 void TransferSktTcp::newData()
 {
 	QMutexLocker locker(&m_door);
 
-	QTcpSocket* s = qobject_cast<QTcpSocket*>(sender());
+	auto s = qobject_cast<QTcpSocket*>(sender());
 	if (!s) return;
 
-	Conn* conn = (Conn*)s->property(PROP_CONN).value<void*>();
+	auto conn = static_cast<Conn*>(s->property(PROP_CONN).value<void*>());
 	if (!conn) return;
 
 	QTcpSocket* d = (s == conn->src) ? conn->dst : conn->src;
@@ -326,13 +329,13 @@ void TransferSktTcp::newData()
 	if (!buf) return;
 
 	qint64 readLen, writeLen, ioLen;
-	
+
 	readLen = 0;
 	ioLen = s->read(buf, bufLen);
 	while (ioLen > 0)
 	{
 		readLen += ioLen;
-		ioLen = s->read(buf+readLen, bufLen-readLen);
+		ioLen = s->read(buf + readLen, bufLen - readLen);
 	}
 
 	if (ioLen >= 0)
@@ -344,13 +347,13 @@ void TransferSktTcp::newData()
 		while (ioLen > 0)
 		{
 			writeLen += ioLen;
-			ioLen = d->write(buf+writeLen, readLen-writeLen);
+			ioLen = d->write(buf + writeLen, readLen - writeLen);
 		}
 
 		if (ioLen >= 0)
 		{
 			recordSend(writeLen);
-			dump(buf, readLen, ((s==conn->src) ? TS2D:TD2S), conn->key);
+			dump(buf, readLen, ((s == conn->src) ? TS2D : TD2S), conn->key);
 		}
 	}
 
@@ -359,13 +362,13 @@ void TransferSktTcp::newData()
 
 void TransferSktTcp::send(void* cookie, bool s2d, const QByteArray& bin)
 {
-	Conn* conn = (Conn*)cookie;
+	auto conn = static_cast<Conn*>(cookie);
 
-	QTcpSocket*  d = s2d ? conn->dst : conn->src;
+	QTcpSocket* d = s2d ? conn->dst : conn->src;
 	QHostAddress a = s2d ? dstAddr() : conn->src->peerAddress();
-	quint16      p = s2d ? dstPort() : conn->src->peerPort();
-	
-	const char *  src = bin.constData(); 
+	quint16 p = s2d ? dstPort() : conn->src->peerPort();
+
+	const char* src = bin.constData();
 	qint64 srcLen = bin.length();
 
 	qint64 writeLen = 0;
@@ -374,22 +377,22 @@ void TransferSktTcp::send(void* cookie, bool s2d, const QByteArray& bin)
 	while (ioLen > 0)
 	{
 		writeLen += ioLen;
-		ioLen = d->write(src+writeLen, srcLen-writeLen);
+		ioLen = d->write(src + writeLen, srcLen - writeLen);
 	}
 
 	if (writeLen != srcLen)
 	{
 		show(QString("failed to send data to %1:%2 [%3]")
-			.arg(a.toString()).arg(p).arg(writeLen));
+		     .arg(a.toString()).arg(p).arg(writeLen));
 		return;
 	}
 
 	recordSend(writeLen);
-	dump(src, srcLen, (s2d?SS2D:SD2S), conn->key);
+	dump(src, srcLen, (s2d ? SS2D : SD2S), conn->key);
 }
 
-TransferSktUdp::TransferSktUdp(QObject *parent)
-:TransferSkt(parent)
+TransferSktUdp::TransferSktUdp(QObject* parent)
+	: TransferSkt(parent)
 {
 }
 
@@ -400,7 +403,7 @@ TransferSktUdp::~TransferSktUdp()
 
 void TransferSktUdp::error()
 {
-	QUdpSocket* s = qobject_cast<QUdpSocket*>(sender());
+	auto s = qobject_cast<QUdpSocket*>(sender());
 
 	show(QString("UDP socket error %1, %2").arg(s->error()).arg(s->errorString()));
 
@@ -419,18 +422,15 @@ bool TransferSktUdp::open()
 		m_timer.start(2000);
 		return true;
 	}
-	else
-	{
-		setError(QString("%1, %2").arg(m_server.error()).arg(m_server.errorString()));
-	}
+	setError(QString("%1, %2").arg(m_server.error()).arg(m_server.errorString()));
 
 	return false;
 }
 
 bool TransferSktUdp::close(void* cookie)
 {
-	Conn* conn = (Conn*)cookie;
-	
+	auto conn = static_cast<Conn*>(cookie);
+
 	if (conn->dst)
 		conn->dst->disconnect(this);
 
@@ -442,7 +442,7 @@ bool TransferSktUdp::close(void* cookie)
 
 void TransferSktUdp::close(QObject* obj)
 {
-	Conn* conn = (Conn*)obj->property(PROP_CONN).value<void*>();
+	auto conn = static_cast<Conn*>(obj->property(PROP_CONN).value<void*>());
 	if (!conn) return;
 
 	unsetCookie(conn->key);
@@ -459,47 +459,48 @@ void TransferSktUdp::close()
 
 void TransferSktUdp::newData()
 {
-	QUdpSocket* s = qobject_cast<QUdpSocket*>(sender());
+	auto s = qobject_cast<QUdpSocket*>(sender());
 	if (!s) return;
 
 	qint64 bufLen = s->pendingDatagramSize();
 	char* buf = TK::createBuffer(bufLen, MAXBUFFER);
 	if (!buf) return;
 
-	QHostAddress addr; quint16 port(0);
+	QHostAddress addr;
+	quint16 port(0);
 
 	qint64 readLen = 0;
 	qint64 ioLen = s->readDatagram(buf, bufLen, &addr, &port);
 
 	//while (ioLen > 0)
 	//{
-		readLen += ioLen;
+	readLen += ioLen;
 	//	ioLen = s->readDatagram(buf+readLen, bufLen-readLen, &addr, &port);
 	//}
 
 	if (ioLen >= 0)
 	{
-		Conn* conn = NULL;
+		Conn* conn = nullptr;
 		if (s == &m_server)
 		{
-			conn = (Conn*)getCookie(TK::ipstr(addr, port));
+			conn = static_cast<Conn*>(getCookie(TK::ipstr(addr, port)));
 			if (!conn)
 			{
 				conn = new Conn;
 				if (conn)
 				{
-					QUdpSocket* dst = new QUdpSocket();
+					auto dst = new QUdpSocket();
 					if (!dst)
 					{
 						delete conn;
-						conn = NULL;
+						conn = nullptr;
 					}
 					else
 					{
-						dst->setProperty(PROP_CONN, qVariantFromValue((void*)conn));
+						dst->setProperty(PROP_CONN, QVariant::fromValue(static_cast<void*>(conn)));
 
-						conn->dst  = dst;
-						conn->key  = TK::ipstr(addr, port);
+						conn->dst = dst;
+						conn->key = TK::ipstr(addr, port);
 						conn->addr = addr;
 						conn->port = port;
 
@@ -516,7 +517,7 @@ void TransferSktUdp::newData()
 		}
 		else
 		{
-			conn = (Conn*)s->property(PROP_CONN).value<void*>();
+			conn = static_cast<Conn*>(s->property(PROP_CONN).value<void*>());
 			if (!conn)
 			{
 				s->disconnect(this);
@@ -537,8 +538,7 @@ void TransferSktUdp::newData()
 				while (ioLen > 0)
 				{
 					writeLen += ioLen;
-					ioLen = (writeLen >= readLen) ? 0 :
-							conn->dst->write(buf+writeLen, readLen-writeLen);
+					ioLen = (writeLen >= readLen) ? 0 : conn->dst->write(buf + writeLen, readLen - writeLen);
 				}
 
 				dump(buf, readLen, TS2D, conn->key);
@@ -549,8 +549,9 @@ void TransferSktUdp::newData()
 				while (ioLen > 0)
 				{
 					writeLen += ioLen;
-					ioLen = (writeLen >= readLen) ? 0 :
-						m_server.writeDatagram(buf+writeLen, readLen-writeLen, conn->addr, conn->port);
+					ioLen = (writeLen >= readLen)
+						        ? 0
+						        : m_server.writeDatagram(buf + writeLen, readLen - writeLen, conn->addr, conn->port);
 				}
 
 				dump(buf, readLen, TD2S, conn->key);
@@ -565,12 +566,12 @@ void TransferSktUdp::newData()
 
 void TransferSktUdp::send(void* cookie, bool s2d, const QByteArray& bin)
 {
-	Conn* conn = (Conn*)cookie;
+	auto conn = static_cast<Conn*>(cookie);
 
 	QHostAddress a = s2d ? dstAddr() : conn->addr;
-	quint16      p = s2d ? dstPort() : conn->port;
-	
-	const char *  src = bin.constData(); 
+	quint16 p = s2d ? dstPort() : conn->port;
+
+	const char* src = bin.constData();
 	qint64 srcLen = bin.length();
 
 	qint64 writeLen = 0;
@@ -583,19 +584,20 @@ void TransferSktUdp::send(void* cookie, bool s2d, const QByteArray& bin)
 		if (writeLen >= srcLen)
 			break;
 
-		ioLen = s2d ? conn->dst->write(src+writeLen, srcLen-writeLen) :
-			m_server.writeDatagram(src+writeLen, srcLen-writeLen, a, p);
+		ioLen = s2d
+			        ? conn->dst->write(src + writeLen, srcLen - writeLen)
+			        : m_server.writeDatagram(src + writeLen, srcLen - writeLen, a, p);
 	}
 
 	if (writeLen != srcLen)
 	{
 		show(QString("failed to send data to %1:%2 [%3]")
-			.arg(a.toString()).arg(p).arg(writeLen));
+		     .arg(a.toString()).arg(p).arg(writeLen));
 		return;
 	}
 
 	recordSend(writeLen);
-	dump(src, srcLen, (s2d?SS2D:SD2S), conn->key);
+	dump(src, srcLen, (s2d ? SS2D : SD2S), conn->key);
 }
 
 void TransferSktUdp::check()
@@ -609,11 +611,10 @@ void TransferSktUdp::check()
 
 		void* c = getCookie(k);
 
-		if (c && (((Conn*)c)->stamp.addSecs(120) < QDateTime::currentDateTime()))
+		if (c && (static_cast<Conn*>(c)->stamp.addSecs(120) < QDateTime::currentDateTime()))
 		{
 			close(c);
 			unsetCookie(k);
 		}
 	}
 }
-

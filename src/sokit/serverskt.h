@@ -9,13 +9,13 @@
 
 class ServerSkt : public QObject
 {
-	typedef QHash<QString, void*> OBJMAP;
+	using OBJMAP = QHash<QString, void*>;
 
 	Q_OBJECT
 
 public:
-	ServerSkt(QObject *parent=0);
-	virtual ~ServerSkt();
+	ServerSkt(QObject* parent = nullptr);
+	~ServerSkt() override;
 
 	virtual QString name() const { return "General"; };
 
@@ -50,7 +50,7 @@ protected:
 	void setCookie(const QString& k, void* v);
 	void unsetCookie(const QString& k);
 	void* getCookie(const QString& k);
-	
+
 
 	virtual bool open() =0;
 	virtual bool close(void* cookie) =0;
@@ -68,25 +68,25 @@ private:
 
 class ServerSktTcp : public ServerSkt
 {
-	typedef struct _Conn
+	using Conn = struct _Conn
 	{
 		QTcpSocket* client;
 		QString key;
-	} Conn;
+	};
 
 	Q_OBJECT
 
 public:
-	ServerSktTcp(QObject *parent=0);
-	virtual ~ServerSktTcp();
+	ServerSktTcp(QObject* parent = nullptr);
+	~ServerSktTcp() override;
 
-	virtual QString name() const { return "TCP"; };
+	QString name() const override { return "TCP"; };
 
 protected:
-	virtual bool open();
-	virtual bool close(void* cookie);
-	virtual void send(void* cookie, const QByteArray& bin);
-	virtual void close();
+	bool open() override;
+	bool close(void* cookie) override;
+	void send(void* cookie, const QByteArray& bin) override;
+	void close() override;
 
 private slots:
 	void newConnection();
@@ -100,27 +100,27 @@ private:
 
 class ServerSktUdp : public ServerSkt
 {
-	typedef struct _Conn
+	using Conn = struct _Conn
 	{
 		QHostAddress addr;
 		quint16 port;
 		QDateTime stamp;
 		QString key;
-	} Conn;
+	};
 
 	Q_OBJECT
 
 public:
-	ServerSktUdp(QObject *parent=0);
-	virtual ~ServerSktUdp();
+	ServerSktUdp(QObject* parent = nullptr);
+	~ServerSktUdp() override;
 
-	virtual QString name() const { return "UDP"; };
+	QString name() const override { return "UDP"; };
 
 protected:
-	virtual bool open();
-	virtual bool close(void* cookie);
-	virtual void send(void* cookie, const QByteArray& bin);
-	virtual void close();
+	bool open() override;
+	bool close(void* cookie) override;
+	void send(void* cookie, const QByteArray& bin) override;
+	void close() override;
 
 private slots:
 	void newData();
@@ -133,4 +133,3 @@ private:
 };
 
 #endif // __SERVERSKT_H__
-
